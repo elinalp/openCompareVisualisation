@@ -31,9 +31,11 @@ public class Execute {
         try{
             List<PCMContainer> pcmContainers = loader.load(pcmFile);
             for (PCMContainer pcmContainer : pcmContainers) {
-                System.out.println(html.export(pcmContainer));
+
+                //Récupération du contenu de la page HTML
                 String htmlContent = html.export(pcmContainer);
 
+                //Ecriture du fichier HTML (écrase si le fichier existe déjà)
                 FileWriter fichier = new FileWriter("prototype/html/simple-example.html");
                 fichier.write (htmlContent);
                 fichier.close();

@@ -38,7 +38,39 @@ public class HTMLGenerate {
 
         // Meta info
         head.appendElement("meta").attr("charset", "utf-8");
-        head.appendElement("<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\" integrity=\"sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u\" crossorigin=\"anonymous\">");
+
+        //Ajout JQuery
+        Element scriptJquery = head.appendElement("script");
+        scriptJquery.attr("src" ,"https://code.jquery.com/jquery-3.1.1.min.js");
+        scriptJquery.attr("integrity", "sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=");
+        scriptJquery.attr("crossorigin", "anonymous");
+
+        //Ajout de Bootstrap
+        //TODO: Rajout lib Bootstrap pour execution en local
+        Element link = head.appendElement("link");
+        link.attr("rel","stylesheet");
+        link.attr("href", "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css");
+        link.attr("integrity","sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u");
+        link.attr("crossorigin","anonymous");
+        Element script = head.appendElement("script");
+        script.attr("src" ,"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js");
+        script.attr("integrity", "sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa");
+        script.attr("crossorigin", "anonymous");
+
+
+
+        //Ajout Chartist
+        Element linkChartist = head.appendElement("link");
+        linkChartist.attr("rel","stylesheet");
+        linkChartist.attr("href", "/getting-started/chartist/chartist.min.css");
+
+        Element scriptChartist =  head.appendElement("script");
+        scriptChartist.attr("src" ,"/getting-started/chartist/chartist.min.js");
+
+        //Ajout Font Awesome
+        Element linkFont = head.appendElement("link");
+        linkFont.attr("rel", "stylesheet");
+        linkFont.attr("href", "/getting-started/font-awesome/css/font-awesome.css");
 
 
         // Create title
@@ -46,8 +78,8 @@ public class HTMLGenerate {
         body.appendElement("h1").text(pcm.getName());
 
         // Create table
-        Element table = body.appendElement("table")
-                .attr("border", "1");
+        Element table = body.appendElement("table").attr("border", "1");
+        table.addClass("table");
 
         ExportMatrix exportMatrix = exportMatrixExporter.export(pcmContainer);
 
@@ -79,6 +111,22 @@ public class HTMLGenerate {
 
             }
         }
+
+
+        Element dernierLigne = table.appendElement("tr");
+        dernierLigne.appendElement("td");
+        for (int column = 1; column < exportMatrix.getNumberOfColumns(); column++) {
+            Element colonneGraph = dernierLigne.appendElement("td");
+            colonneGraph.addClass("graph_cell");
+            Element iconeBarChart = colonneGraph.appendElement("i");
+            iconeBarChart.addClass("fa fa-bar-chart");
+            Element iconePieChar = colonneGraph.appendElement("i");
+            iconePieChar.addClass("fa fa-pie-chart");
+
+        }
+
+
+
 
         // Export to HTML code
         Document.OutputSettings settings = new Document.OutputSettings().prettyPrint(false);
