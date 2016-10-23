@@ -72,6 +72,10 @@ public class HTMLGenerate {
         linkFont.attr("rel", "stylesheet");
         linkFont.attr("href", "/getting-started/font-awesome/css/font-awesome.css");
 
+        //Ajout du main script javascript
+        Element scriptMain =  head.appendElement("script");
+        scriptMain.attr("src" ,"/getting-started/prototype/javascript/main.js");
+
 
         // Create title
         head.appendElement("title").text(pcm.getName());
@@ -113,20 +117,32 @@ public class HTMLGenerate {
         }
 
 
+        //Génératon de la dernière ligne : icone d'affichage des graphes
         Element dernierLigne = table.appendElement("tr");
         dernierLigne.appendElement("td");
         for (int column = 1; column < exportMatrix.getNumberOfColumns(); column++) {
             Element colonneGraph = dernierLigne.appendElement("td");
             colonneGraph.addClass("graph_cell");
-            Element iconeBarChart = colonneGraph.appendElement("i");
+
+            Element lienBarChart = colonneGraph.appendElement("a");
+            lienBarChart.attr("data-type", "barchart");
+            lienBarChart.addClass("GenereGraph");
+            Element iconeBarChart = lienBarChart.appendElement("i");
             iconeBarChart.addClass("fa fa-bar-chart");
-            Element iconePieChar = colonneGraph.appendElement("i");
+
+            Element lienPieChart = colonneGraph.appendElement("a");
+            lienPieChart.attr("data-type", "piechart");
+            lienPieChart.addClass("GenereGraph");
+            Element iconePieChar = lienPieChart.appendElement("i");
             iconePieChar.addClass("fa fa-pie-chart");
 
         }
 
 
+        //Div pour la création de graphe
 
+        Element divGraph = body.appendElement("div");
+        divGraph.addClass("ct-chart ct-perfect-fourth");
 
         // Export to HTML code
         Document.OutputSettings settings = new Document.OutputSettings().prettyPrint(false);
