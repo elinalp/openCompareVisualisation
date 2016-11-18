@@ -6,10 +6,13 @@ import org.jsoup.nodes.Entities;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.parser.Tag;
 import org.opencompare.api.java.*;
+import org.opencompare.api.java.impl.io.KMFJSONLoader;
 import org.opencompare.api.java.util.Pair;
 import org.opencompare.*;
 import org.opencompare.api.java.io.*;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,22 +22,15 @@ import java.util.List;
  */
 public class HTMLGenerate {
 
-    private ExportMatrixExporter exportMatrixExporter = new ExportMatrixExporter();
+    private static ExportMatrixExporter exportMatrixExporter = new ExportMatrixExporter();
+    private static Document doc = Document.createShell("");
+    private static Element head = doc.head();
+    private static Element body = doc.body();
 
-    public String export(PCMContainer pcmContainer) {
-        PCM pcm = pcmContainer.getPcm();
-
-        final PCMMetadata metadata;
-        if (pcmContainer.getMetadata() == null) {
-            metadata = new PCMMetadata(pcm);
-        } else {
-            metadata = pcmContainer.getMetadata();
-        }
-
-        // Create HTML document
-        Document doc = Document.createShell("");
-        Element head = doc.head();
-        Element body = doc.body();
+    /**
+     * Crée l'entête du document HTML
+     */
+    private static void createHead(){
 
         // Meta info
         head.appendElement("meta").attr("charset", "utf-8");
@@ -57,8 +53,6 @@ public class HTMLGenerate {
         script.attr("integrity", "sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa");
         script.attr("crossorigin", "anonymous");
 
-
-
         //Ajout Chartist
         Element linkChartist = head.appendElement("link");
         linkChartist.attr("rel","stylesheet");
@@ -77,9 +71,15 @@ public class HTMLGenerate {
         scriptMain.attr("src" ,"/getting-started/prototype/javascript/main.js");
 
 
-        // Create title
-        head.appendElement("title").text(pcm.getName());
-        body.appendElement("h1").text(pcm.getName());
+    }
+
+    /**
+     * Crée le body du document HTML
+     *
+     * @param pcmContainer
+     *      Objet contenant une PCM
+     */
+    private static void createBody(PCMContainer pcmContainer){
 
         // Create table
         Element table = body.appendElement("table").attr("border", "1");
@@ -102,7 +102,7 @@ public class HTMLGenerate {
                     }
 
                     htmlCell.attr("style", "white-space: pre;");
-                    htmlCell.text(textToHTML(exportCell.getContent()));
+                    htmlCell.text(exportCell.getContent());
 
                     if (exportCell.getRowspan() > 1) {
                         htmlCell.attr("rowspan", "" + exportCell.getRowspan());
@@ -140,21 +140,82 @@ public class HTMLGenerate {
 
 
         //Div pour la création de graphe
-
         Element divGraph = body.appendElement("div");
         divGraph.addClass("ct-chart ct-perfect-fourth");
+    }
 
-        // Export to HTML code
+
+
+    /**
+     *  Ecrit une chaîne de caractère dans un fichier
+     * @param htmlContent
+     *      La chaîne de caractères contenant le code de la page HTML
+     */
+    private static void writeFile(String htmlContent){
+        try{
+            FileWriter fichier = new FileWriter("prototype/html/simple-example.html");
+            fichier.write (htmlContent);
+            fichier.close();
+        } catch (Exception e){
+
+        }
+    }
+
+    /**
+     * Converti un fichier contenant une PCM en code HTML
+     *
+     * @param nameFile
+     *      Le nom du fichier contenant la PCM à exporter
+     *
+     * @return String : la chaîne de caractère contenant le code de la page HTMl
+     */
+    public static String export(String nameFile) {
+        File pcmFile = new File(nameFile);
+        // Create a loader that can handle the file format
+        PCMLoader loader = new KMFJSONLoader();
+        //Create head of the HTML document
+        createHead();
+
+        try
+        {
+            // Load the file
+            // A loader may return multiple PCM containers depending on the input format
+            // A PCM container encapsulates a PCM and its associated metadata
+            List<PCMContainer> pcmContainers = loader.load(pcmFile);
+            for (PCMContainer pcmContainer : pcmContainers) {
+                PCM pcm = pcmContainer.getPcm();
+                setTitleHtml(pcm.getName());
+                final PCMMetadata metadata;
+                if (pcmContainer.getMetadata() == null) {
+                    metadata = new PCMMetadata(pcm);
+                } else {
+                    metadata = pcmContainer.getMetadata();
+                }
+                //Create body of the HTML document
+                createBody(pcmContainer);
+            }
+        }catch (Exception e){
+
+        }
+        //HTML code of the document
         Document.OutputSettings settings = new Document.OutputSettings().prettyPrint(false);
         return doc.outputSettings(settings).outerHtml();
-
     }
 
-    private String textToHTML(String text) {
-//        String formattedText = text
-//                .replaceAll("\n", "<br />");
-//        return formattedText;
-        return text;
+    private static void setTitleHtml(String pcmName){
+        head.appendElement("title").text(pcmName);
+        body.appendElement("h1").text(pcmName);
     }
+
+    public static void main(String[] args){
+        try
+        {
+            // Ecriture du fichier HTML (écrase si le fichier existe déjà)
+            writeFile(export("pcms/simple-example.pcm"));
+        }catch (Exception e){
+
+        }
+    }
+
 
 }
