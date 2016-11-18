@@ -1,12 +1,20 @@
 package org.opencompare;
-import org.opencompare.api.java.*;
-import org.opencompare.api.java.value.*;
-import java.util.Hashtable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Iterator;
 
-import java.util.Collection;
+import org.opencompare.api.java.Cell;
+import org.opencompare.api.java.Feature;
+import org.opencompare.api.java.Value;
+import org.opencompare.api.java.value.BooleanValue;
+import org.opencompare.api.java.value.IntegerValue;
+import org.opencompare.api.java.value.StringValue;
+import org.opencompare.chart.Chart;
+import org.opencompare.chart.PieChart;
+import org.opencompare.chart.PolarChart;
+import org.opencompare.chart.BarChart;
+
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by Elina on 18/11/2016.
@@ -63,11 +71,28 @@ public class FeatureViz {
 
         if(this.typeSelected instanceof IntegerValue){
             // Create chart
-        } else if (this.typeSelected instanceof StringValue){
+            // Histogramme
+
+            // Diagramme en baton - on étudie la feature et le product
+            // Aucun regroupement
+            listChart.add(new BarChart("barChart", "fa fa-barchart", this.typeSelected, false));
+
+        } else if (this.typeSelected instanceof StringValue || this.typeSelected instanceof BooleanValue){
             // Create chart
-        } else if (this.typeSelected instanceof BooleanValue){
-            // Create chart
+            if(getCountModalite() <= 5 ){
+                // Pie Chart
+                listChart.add(new PieChart("pieChart", "fa fa-piechart", this.typeSelected));
+                // Diagramme polaire
+                listChart.add(new PolarChart("polarChart", "fa fa-polarchart", this.typeSelected));
+
+            } else {
+                // Diagramme en baton
+                // regroupement
+                listChart.add(new BarChart("barChart", "fa fa-barchart", this.typeSelected, true));
+            }
+
         }
+
         return listChart;
     }
 

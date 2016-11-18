@@ -1,4 +1,4 @@
-package org.opencompare;
+package org.opencompare.chart;
 import org.opencompare.api.java.*;
 
 /**
@@ -10,6 +10,11 @@ public class Chart {
     private String nameIcon;
     private Value featureType;
 
+    public Chart(String name, String icon, Value type){
+        this.nameChart = name;
+        this.nameIcon = icon;
+        this.featureType = type;
+    }
     public String getNameChart(){
         return this.nameChart;
     }
