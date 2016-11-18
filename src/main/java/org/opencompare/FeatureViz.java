@@ -32,6 +32,28 @@ public class FeatureViz {
 
         Hashtable<Value, Integer> collectionTypes = new Hashtable<Value, Integer>();
 
+        // Récupère la liste des cellules de la feature
+        List<Cell> listCells = feature.getCells();
+
+        // Création d'une liste des modalités
+        List<String> listModalite =  new ArrayList<String>();
+
+        // Parcours de la liste des cellules
+        Iterator iterator = listCells.iterator();
+        while (iterator.hasNext()) {
+            Cell c = (Cell) iterator.next();
+
+            // Récupération du type de la cellule
+            Value cellValue = c.getInterpretation();
+
+            if(collectionTypes.containsKey(cellValue)){
+                // On incrémente le type de la feature
+                collectionTypes.put(cellValue, collectionTypes.get(cellValue) + 1);
+            } else {
+                // On ajoute le type à la collection
+                collectionTypes.put(cellValue, 1);
+            }
+        }
 
         return collectionTypes;
     }
