@@ -4,6 +4,7 @@ import org.opencompare.api.java.value.*;
 import java.util.Hashtable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 
 import java.util.Collection;
 
@@ -49,7 +50,26 @@ public class FeatureViz {
     }
 
     public int getCountModalite(){
-        int nb = 0;
-        return nb;
+
+        // Récupère la liste des cellules de la feature
+        List<Cell> listCells = feature.getCells();
+
+        // Création d'une liste des modalités
+        List<String> listModalite =  new ArrayList<String>();
+
+        // Parcours de la liste des cellules
+        Iterator iterator = listCells.iterator();
+        while (iterator.hasNext()) {
+            Cell c = (Cell) iterator.next();
+            // Récupération du contenu de la cellule
+            String cellContent = c.getContent();
+
+            // Si la modalité n'est pas présente dans la liste de modalité
+            if (!listModalite.contains(cellContent)) {
+                // On ajoute la modalité
+                listModalite.add(cellContent);
+            }
+        }
+        return listModalite.size();
     }
 }
