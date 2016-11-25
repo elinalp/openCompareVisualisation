@@ -170,6 +170,14 @@ public class HTMLGenerate {
 
             //Parcours de la liste des charts
             for(Chart c : chartsList){
+                // Antoine pour chaque Chart c
+                // Le type des feature a choisir pour le graphique ? ( Surement afficher pour chaque cellules le type
+                // Si il y a plusieurs type de données dans le feature on prend uniqement les données associé a c.getFeatureType();
+                // Quelque chose comme ca : data-cell-type = cell.getInterpretation()
+                c.getFeatureType();
+                c.getNameChart();
+                c.getNameIcon();
+
                 Element lienChart = colonneGraph.appendElement("a");
                 lienChart.attr("data-type", c.getNameChart());
                 lienChart.addClass("GenereGraph");
