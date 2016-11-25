@@ -7,7 +7,7 @@ import org.opencompare.api.java.Value;
  */
 public class HistogramChart extends Chart {
 
-    public HistogramChart(String name, String icon, Value type){
+    public HistogramChart(String name, String icon, Class<Value> type){
         super(name, icon, type);
     }
 }

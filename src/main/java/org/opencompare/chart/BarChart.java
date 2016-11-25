@@ -10,7 +10,7 @@ public class BarChart extends Chart {
 
     private boolean regroupement;
 
-    public BarChart(String name, String icon, Value type, boolean r){
+    public BarChart(String name, String icon, Class<Value> type, boolean r){
         super(name, icon, type);
         this.regroupement = r;
     }

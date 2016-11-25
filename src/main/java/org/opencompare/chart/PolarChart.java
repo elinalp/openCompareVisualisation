@@ -7,7 +7,7 @@ import org.opencompare.api.java.Value;
  */
 public class PolarChart extends Chart {
 
-    public PolarChart(String name, String icon, Value type){
+    public PolarChart(String name, String icon, Class<Value> type){
         super(name, icon, type);
     }
 }

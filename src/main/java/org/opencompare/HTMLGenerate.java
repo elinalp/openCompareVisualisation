@@ -6,16 +6,17 @@ import org.jsoup.nodes.Entities;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.parser.Tag;
 import org.opencompare.api.java.*;
+import org.opencompare.api.java.impl.ValueImpl;
 import org.opencompare.api.java.impl.io.KMFJSONLoader;
 import org.opencompare.api.java.util.Pair;
 import org.opencompare.*;
 import org.opencompare.api.java.io.*;
+import org.opencompare.chart.Chart;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Created by gbecan on 13/10/14.
@@ -26,7 +27,7 @@ public class HTMLGenerate {
     private static Document doc = Document.createShell("");
     private static Element head = doc.head();
     private static Element body = doc.body();
-
+    private static FeatureVizFactory featureVizFactory = new FeatureVizFactory();
     /**
      * Crée l'entête du document HTML
      */
@@ -85,6 +86,36 @@ public class HTMLGenerate {
      */
     private static void createBody(PCMContainer pcmContainer){
 
+        //Création de l'entête projet
+
+        Element banner = body.appendElement("section").attr("id", "banner");
+        Element divHeader = banner.appendElement("div").attr("class", "inner");
+        divHeader.appendElement("h1").attr("class", "h1_custom").text("Projet PDL MIAGE");
+
+
+        Element divProfil = banner.appendElement("div").attr("class", "container");
+        divProfil.appendElement("h2").attr("class", "h2_custom").text("Notre équipe: ");
+        Element divRow = divProfil.appendElement("div").attr("class", "row text-center");
+
+        //Génération des cinq div membres
+        divRow.appendElement("div").attr("class", "col-md-1");
+        Element divAntoine = divRow.appendElement("div").attr("class", "col-md-2");
+        Element imgAntoine = divAntoine.appendElement("div").attr("class", "circular_antoine");
+        Element textAntoine = divAntoine.appendElement("span").attr("class", "span_nom").text("Antoine RAVET");
+        Element divAlexis = divRow.appendElement("div").attr("class", "col-md-2");
+        Element imgAlexis = divAlexis.appendElement("div").attr("class", "circular_alexis");
+        Element textAlexis = divAlexis.appendElement("span").attr("class", "span_nom").text("Alexis RENAULT");
+        Element divPL = divRow.appendElement("div").attr("class", "col-md-2");
+        Element imgPL = divPL.appendElement("div").attr("class", "circular_PL");
+        Element textPL= divPL.appendElement("span").attr("class", "span_nom").text("Pierre-Louis Ollivier");
+        Element divElina = divRow.appendElement("div").attr("class", "col-md-2");
+        Element imgElina = divElina.appendElement("div").attr("class", "circular_elina");
+        Element textElina = divElina.appendElement("span").attr("class", "span_nom").text("Elina LEPETIT");
+        Element divKilian = divRow.appendElement("div").attr("class", "col-md-2");
+        Element imgKilian = divKilian.appendElement("div").attr("class", "circular_kilian");
+        Element textKilain = divKilian.appendElement("span").attr("class", "span_nom").text("Kilian Guégan");
+        divRow.appendElement("div").attr("class", "col-md-1");
+
         // Create table
         Element table = body.appendElement("table").attr("border", "1");
         table.addClass("table table-striped table-hover");
@@ -123,23 +154,28 @@ public class HTMLGenerate {
 
         //Génératon de la dernière ligne : icone d'affichage des graphes
         Element dernierLigne = table.appendElement("tr");
-        dernierLigne.appendElement("td");
-        for (int column = 1; column < exportMatrix.getNumberOfColumns(); column++) {
+        //dernierLigne.appendElement("td");
+        for(Feature f : pcmContainer.getPcm().getConcreteFeatures()){
             Element colonneGraph = dernierLigne.appendElement("td");
             colonneGraph.addClass("graph_cell");
 
-            Element lienBarChart = colonneGraph.appendElement("a");
-            lienBarChart.attr("data-type", "barchart");
-            lienBarChart.addClass("GenereGraph");
-            Element iconeBarChart = lienBarChart.appendElement("i");
-            iconeBarChart.addClass("fa fa-bar-chart");
+            //Algo récupération liste des charts
+            FeatureViz viz = featureVizFactory.makeFeatureViz(f);
+            Hashtable<Class<Value>, Integer> typesCollection = viz.getTypesFeature();
+            Feature2TypeConfig f2tc = new Feature2TypeConfig(typesCollection);
+            Class<Value> valuePredominant = f2tc.getPredominantType();
+            viz.setTypeSelected(valuePredominant);
+            List<Chart> chartsList = viz.getListCharts();
+            System.out.println(chartsList.size());
 
-            Element lienPieChart = colonneGraph.appendElement("a");
-            lienPieChart.attr("data-type", "piechart");
-            lienPieChart.addClass("GenereGraph");
-            Element iconePieChar = lienPieChart.appendElement("i");
-            iconePieChar.addClass("fa fa-pie-chart");
-
+            //Parcours de la liste des charts
+            for(Chart c : chartsList){
+                Element lienChart = colonneGraph.appendElement("a");
+                lienChart.attr("data-type", c.getNameChart());
+                lienChart.addClass("GenereGraph");
+                Element iconeBarChart = lienChart.appendElement("i");
+                iconeBarChart.addClass(c.getNameIcon());
+            }
         }
 
 
@@ -189,12 +225,6 @@ public class HTMLGenerate {
             for (PCMContainer pcmContainer : pcmContainers) {
                 PCM pcm = pcmContainer.getPcm();
                 setTitleHtml(pcm.getName());
-                final PCMMetadata metadata;
-                if (pcmContainer.getMetadata() == null) {
-                    metadata = new PCMMetadata(pcm);
-                } else {
-                    metadata = pcmContainer.getMetadata();
-                }
                 //Create body of the HTML document
                 createBody(pcmContainer);
             }
@@ -219,6 +249,19 @@ public class HTMLGenerate {
         }catch (Exception e){
 
         }
+    }
+
+    /**
+     * Méthode renvoyant un objet PCM à partir d'un nom de fichier
+     * @param nameFile
+     *      Le nom du fichier
+     * @return une instance de PCM, qui correspond à la PCM contenu dans le fichier
+     * @throws IOException
+     */
+    private static PCM getPCM(String nameFile) throws IOException {
+        File pcmFile = new File(nameFile);
+        PCMLoader loader = new KMFJSONLoader();
+        return loader.load(pcmFile).get(0).getPcm();
     }
 
 

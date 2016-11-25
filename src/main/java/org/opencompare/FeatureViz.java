@@ -3,8 +3,12 @@ package org.opencompare;
 import org.opencompare.api.java.Cell;
 import org.opencompare.api.java.Feature;
 import org.opencompare.api.java.Value;
+import org.opencompare.api.java.impl.value.BooleanValueImpl;
+import org.opencompare.api.java.impl.value.RealValueImpl;
+import org.opencompare.api.java.impl.value.StringValueImpl;
 import org.opencompare.api.java.value.BooleanValue;
 import org.opencompare.api.java.value.IntegerValue;
+import org.opencompare.api.java.value.RealValue;
 import org.opencompare.api.java.value.StringValue;
 import org.opencompare.chart.Chart;
 import org.opencompare.chart.PieChart;
@@ -34,7 +38,7 @@ public class FeatureViz {
     /**
      * La valeur de la feature selectionnée parmi toutes celles présentes.
      */
-    private Value typeSelected;
+    private Class<Value> typeSelected;
 
     /**
      * Constructeur
@@ -48,7 +52,7 @@ public class FeatureViz {
      *
      * @return {@link #typeSelected}
      */
-    public Value getTypeSelected(){
+    public Class<Value> getTypeSelected(){
         return this.typeSelected;
     }
 
@@ -56,7 +60,7 @@ public class FeatureViz {
      * Affecte la value choisie à l'attribut typeSelected
      * @param v
      */
-    public void setTypeSelected(Value v){
+    public void setTypeSelected(Class<Value> v){
         this.typeSelected = v;
     }
 
@@ -103,7 +107,7 @@ public class FeatureViz {
     public List<Chart> getListCharts(){
         List<Chart> listChart = new ArrayList<Chart>();
 
-        if(this.typeSelected instanceof IntegerValue){
+        if(this.typeSelected.getClass().equals(IntegerValue.class)){
             // Create chart
             // Histogramme
 
@@ -111,20 +115,24 @@ public class FeatureViz {
             // Aucun regroupement
             listChart.add(new BarChart("barChart", "fa fa-barchart", this.typeSelected, false));
 
-        } else if (this.typeSelected instanceof StringValue || this.typeSelected instanceof BooleanValue){
+        } //else if (this.typeSelected instanceof StringValue || this.typeSelected instanceof BooleanValue){
+            else if (this.typeSelected.getCanonicalName().equals(StringValueImpl.class) || this.typeSelected.getCanonicalName().equals(BooleanValueImpl.class)){
             // Create chart
             if(getCountModalite() <= 5 ){
                 // Pie Chart
-                listChart.add(new PieChart("pieChart", "fa fa-piechart", this.typeSelected));
+                listChart.add(new PieChart("pieChart", "fa fa-pie-chart", this.typeSelected));
                 // Diagramme polaire
-                listChart.add(new PolarChart("polarChart", "fa fa-polarchart", this.typeSelected));
+                listChart.add(new PolarChart("polarChart", "fa fa-polar-chart", this.typeSelected));
 
             } else {
                 // Diagramme en baton
                 // regroupement
-                listChart.add(new BarChart("barChart", "fa fa-barchart", this.typeSelected, true));
+                listChart.add(new BarChart("barChart", "fa fa-bar-chart", this.typeSelected, true));
             }
+        } else if(this.typeSelected.getCanonicalName().equals(RealValueImpl.class.getCanonicalName())){
+            listChart.add(new BarChart("barChart", "fa fa-bar-chart", this.typeSelected, true));
         }
+
         return listChart;
     }
 

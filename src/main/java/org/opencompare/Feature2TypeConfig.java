@@ -13,8 +13,8 @@ public class Feature2TypeConfig {
     /**
      * Constructeur de Feature2TypeConfig
      */
-    public Feature2TypeConfig(){
-        collectionTypesFeature = new Hashtable<Class<Value>, Integer>();
+    public Feature2TypeConfig(Hashtable<Class<Value>, Integer> collectionTypesFeature){
+        this.collectionTypesFeature = collectionTypesFeature;
     }
 
     /**

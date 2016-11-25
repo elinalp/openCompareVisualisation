@@ -8,9 +8,9 @@ public class Chart {
 
     private String nameChart;
     private String nameIcon;
-    private Value featureType;
+    private Class<Value> featureType;
 
-    public Chart(String name, String icon, Value type){
+    public Chart(String name, String icon, Class<Value> type){
         this.nameChart = name;
         this.nameIcon = icon;
         this.featureType = type;
@@ -23,7 +23,7 @@ public class Chart {
         return this.nameIcon;
     }
 
-    public Value getFeatureType(){
+    public Class<Value> getFeatureType(){
         return this.featureType;
     }
 

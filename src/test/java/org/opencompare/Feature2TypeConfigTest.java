@@ -44,8 +44,7 @@ public class Feature2TypeConfigTest {
     @Test
     public void testGetPredominantType() throws IOException{
         initialisation();
-        Feature2TypeConfig f2tc = new Feature2TypeConfig();
-        f2tc.setCollectionTypesFeature(collection);
+        Feature2TypeConfig f2tc = new Feature2TypeConfig(collection);
         Class<Value> predominantType = f2tc.getPredominantType();
         System.out.println(predominantType);
     }
@@ -53,8 +52,7 @@ public class Feature2TypeConfigTest {
     @Test
     public void testGetRandomType() throws IOException{
         initialisation();
-        Feature2TypeConfig f2tc = new Feature2TypeConfig();
-        f2tc.setCollectionTypesFeature(collection);
+        Feature2TypeConfig f2tc = new Feature2TypeConfig(collection);
         Class<Value> randomType = f2tc.getRandomType();
         System.out.println(randomType);
     }
