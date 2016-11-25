@@ -3,6 +3,7 @@ package org.opencompare;
 import org.opencompare.api.java.Cell;
 import org.opencompare.api.java.Feature;
 import org.opencompare.api.java.Value;
+import org.opencompare.api.java.impl.ValueImpl;
 import org.opencompare.api.java.value.BooleanValue;
 import org.opencompare.api.java.value.IntegerValue;
 import org.opencompare.api.java.value.StringValue;
@@ -10,6 +11,10 @@ import org.opencompare.chart.Chart;
 import org.opencompare.chart.PieChart;
 import org.opencompare.chart.PolarChart;
 import org.opencompare.chart.BarChart;
+
+
+
+import org.opencompare.model.*;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -54,7 +59,7 @@ public class FeatureViz {
             // Récupération du type de la cellule
             Value cellValue = c.getInterpretation();
 
-            if(collectionTypes.containsKey(cellValue)){
+            if(collectionTypes.containsKey(cellValue.getkValue())){
                 // On incrémente le type de la feature
                 collectionTypes.put(cellValue, collectionTypes.get(cellValue) + 1);
             } else {
@@ -90,14 +95,12 @@ public class FeatureViz {
                 // regroupement
                 listChart.add(new BarChart("barChart", "fa fa-barchart", this.typeSelected, true));
             }
-
         }
 
         return listChart;
     }
 
     public int getCountModalite(){
-
         // Récupère la liste des cellules de la feature
         List<Cell> listCells = feature.getCells();
 
