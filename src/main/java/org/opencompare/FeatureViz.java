@@ -11,6 +11,9 @@ import org.opencompare.chart.PieChart;
 import org.opencompare.chart.PolarChart;
 import org.opencompare.chart.BarChart;
 
+import java.awt.*;
+import java.text.Normalizer;
+
 import org.opencompare.api.java.impl.ValueImpl;
 
 
@@ -24,21 +27,44 @@ import java.util.List;
  */
 public class FeatureViz {
 
+    /**
+     * La feature associée a la classe FeatureViz
+     */
     private Feature feature;
+    /**
+     * La valeur de la feature selectionnée parmi toutes celles présentes.
+     */
     private Value typeSelected;
 
+    /**
+     * Constructeur
+     * @param f Feature
+     */
     public FeatureViz(Feature f){
         this.feature = f;
     }
 
+    /**
+     *
+     * @return {@link #typeSelected}
+     */
     public Value getTypeSelected(){
         return this.typeSelected;
     }
 
+    /**
+     * Affecte la value choisie à l'attribut typeSelected
+     * @param v
+     */
     public void setTypeSelected(Value v){
         this.typeSelected = v;
     }
 
+    /**
+     * Retourne une collection des types de values différentes dans la feature.
+     * Les values en clé et leur nombre d'apparition en valeur.
+     * @return Collection
+     */
     public Hashtable<Class<Value>, Integer> getTypesFeature(){
 
         Hashtable<Class<Value>, Integer> collectionTypes = new Hashtable<Class<Value>, Integer>();
@@ -56,28 +82,30 @@ public class FeatureViz {
 
             // Récupération du type de la cellule
             Value cellValue = c.getInterpretation();
-            Class cl = cellValue.getClass();
+            Class classe = cellValue.getClass();
 
-            if(collectionTypes.containsKey(cl)){
+            if(collectionTypes.containsKey(classe)){
                 // On incrémente le type de la feature
-                collectionTypes.put(cl, collectionTypes.get(cl) + 1);
+                collectionTypes.put(classe, collectionTypes.get(classe) + 1);
 
             } else {
                 // On ajoute le type à la collection
-                collectionTypes.put(cl, 1);
+                collectionTypes.put(classe, 1);
             }
         }
         return collectionTypes;
     }
 
+    /**
+     * Retourne la liste de char associée à la feature.
+     * @return List
+     */
     public List<Chart> getListCharts(){
         List<Chart> listChart = new ArrayList<Chart>();
 
         if(this.typeSelected instanceof IntegerValue){
             // Create chart
             // Histogramme
-
-
 
             // Diagramme en baton - on étudie la feature et le product
             // Aucun regroupement
@@ -96,12 +124,14 @@ public class FeatureViz {
                 // regroupement
                 listChart.add(new BarChart("barChart", "fa fa-barchart", this.typeSelected, true));
             }
-
         }
-
         return listChart;
     }
 
+    /**
+     * Retourne le nombre de modalité pour la feature
+     * @return int
+     */
     public int getCountModalite(){
 
         // Récupère la liste des cellules de la feature
@@ -116,6 +146,16 @@ public class FeatureViz {
             Cell c = (Cell) iterator.next();
             // Récupération du contenu de la cellule
             String cellContent = c.getContent();
+            // Modification de la chaine de caractere
+            // mettre en miniscule
+            cellContent = cellContent.toLowerCase();
+            // Enleve les espaces en debut et fin de la chaine
+            cellContent = cellContent.trim();
+            // Remplace les espaces par des underscores
+            cellContent = cellContent.replaceAll(" ", "_");
+            // Suppression des accents
+            cellContent = Normalizer.normalize(cellContent, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "");
+            System.out.print(cellContent);
 
             // Si la modalité n'est pas présente dans la liste de modalité
             if (!listModalite.contains(cellContent)) {
