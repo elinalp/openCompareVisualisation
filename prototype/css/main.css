@@ -1,0 +1,67 @@
+#banner {
+		background-color: #3498db;
+		color: rgba(255, 255, 255, 0.75);
+		text-align: center;
+		cursor: default;
+		padding: 1em 4em 1em 4em;
+		margin-bottom: 20px;
+}
+
+.h1_custom{
+    text-align:center;
+}
+
+.h2_custom{
+    text-align:center;
+}
+
+.circular_antoine{
+    width: 100%;
+    height: 165px;
+    border-radius: 100px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    background: url(/getting-started/prototype/img/profil_antoine.png) no-repeat;
+}
+
+.circular_PL{
+    width: 100%;
+        height: 165px;
+    border-radius: 100px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    background: url(/getting-started/prototype/img/profil_pl.png) no-repeat;
+}
+
+.circular_alexis{
+    width: 100%;
+    height: 165px;
+    border-radius: 100px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    background: url(/getting-started/prototype/img/profil_alexis.png) no-repeat;
+}
+
+.circular_elina{
+    width: 100%;
+    height: 165px;
+    border-radius: 100px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    background: url(/getting-started/prototype/img/profil_elina.png) no-repeat;
+}
+
+.circular_kilian{
+    width: 100%;
+    height: 165px;
+    border-radius: 100px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    background: url(/getting-started/prototype/img/profil_kilian.png) no-repeat;
+}
+
+.span_nom{
+    padding: 10px;
+    font-weight:bold;
+    margin: 10px;
+}

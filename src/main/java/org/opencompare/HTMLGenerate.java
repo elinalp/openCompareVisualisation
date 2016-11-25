@@ -7,16 +7,15 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.parser.Tag;
 import org.opencompare.api.java.*;
 import org.opencompare.api.java.impl.io.KMFJSONLoader;
-import org.opencompare.api.java.impl.value.StringValueImpl;
 import org.opencompare.api.java.util.Pair;
 import org.opencompare.*;
 import org.opencompare.api.java.io.*;
-import org.opencompare.api.java.impl.ValueImpl;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.time.Clock;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by gbecan on 13/10/14.
@@ -70,6 +69,12 @@ public class HTMLGenerate {
         //Ajout du main script javascript
         Element scriptMain =  head.appendElement("script");
         scriptMain.attr("src" ,"/getting-started/prototype/javascript/main.js");
+
+        //Ajout du css global
+        Element cssGlobal =  head.appendElement("link");
+        cssGlobal.attr("rel", "stylesheet");
+        cssGlobal.attr("href", "/getting-started/prototype/css/main.css");
+
     }
 
     /**
@@ -82,7 +87,7 @@ public class HTMLGenerate {
 
         // Create table
         Element table = body.appendElement("table").attr("border", "1");
-        table.addClass("table");
+        table.addClass("table table-striped table-hover");
 
         ExportMatrix exportMatrix = exportMatrixExporter.export(pcmContainer);
 
@@ -111,6 +116,7 @@ public class HTMLGenerate {
                         htmlCell.attr("colspan", "" + exportCell.getColspan());
                     }
                 }
+
             }
         }
 
@@ -173,15 +179,25 @@ public class HTMLGenerate {
         PCMLoader loader = new KMFJSONLoader();
         //Create head of the HTML document
         createHead();
+
         try
         {
             // Load the file
             // A loader may return multiple PCM containers depending on the input format
             // A PCM container encapsulates a PCM and its associated metadata
-            PCMContainer pcmContainer = loader.load(pcmFile).get(0);
-            setTitleHtml(pcmContainer.getPcm().getName());
-            //Create body of the HTML document
-            createBody(pcmContainer);
+            List<PCMContainer> pcmContainers = loader.load(pcmFile);
+            for (PCMContainer pcmContainer : pcmContainers) {
+                PCM pcm = pcmContainer.getPcm();
+                setTitleHtml(pcm.getName());
+                final PCMMetadata metadata;
+                if (pcmContainer.getMetadata() == null) {
+                    metadata = new PCMMetadata(pcm);
+                } else {
+                    metadata = pcmContainer.getMetadata();
+                }
+                //Create body of the HTML document
+                createBody(pcmContainer);
+            }
         }catch (Exception e){
 
         }
@@ -199,24 +215,8 @@ public class HTMLGenerate {
         try
         {
             // Ecriture du fichier HTML (écrase si le fichier existe déjà)
-            //writeFile(export("pcms/simple-example.pcm"));
-            File pcmFile = new File("pcms/pcmPredominantType2.pcm");
-            PCMLoader loader = new KMFJSONLoader();
-            PCMContainer pcmContainer= loader.load(pcmFile).get(0);
-            List<Feature> lf = pcmContainer.getPcm().getConcreteFeatures();
-            FeatureViz fv = new FeatureViz(lf.get(1));
-            Feature2TypeConfig f2tc = new Feature2TypeConfig();
-            Hashtable<Value, Integer> collect = fv.getTypesFeature();
-            Iterator<Value> it = collect.keySet().iterator();
-            while(it.hasNext()){
-                System.out.println(it.next().toString());
-            }
-            f2tc.setCollectionTypesFeature(collect);
-            Value v = f2tc.getPredominantType();
-            //System.out.print(f2tc.getFirstElement());
-
+            writeFile(export("pcms/simple-example.pcm"));
         }catch (Exception e){
-            System.out.print("exception");
 
         }
     }
