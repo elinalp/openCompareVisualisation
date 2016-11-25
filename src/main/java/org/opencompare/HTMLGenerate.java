@@ -70,6 +70,10 @@ public class HTMLGenerate {
         Element scriptMain =  head.appendElement("script");
         scriptMain.attr("src" ,"/getting-started/prototype/javascript/main.js");
 
+        //Ajout du css global
+        Element cssGlobal =  head.appendElement("link");
+        cssGlobal.attr("rel", "stylesheet");
+        cssGlobal.attr("href", "/getting-started/prototype/css/main.css");
 
     }
 
@@ -81,9 +85,39 @@ public class HTMLGenerate {
      */
     private static void createBody(PCMContainer pcmContainer){
 
+        //Création de l'entête projet
+
+        Element banner = body.appendElement("section").attr("id", "banner");
+        Element divHeader = banner.appendElement("div").attr("class", "inner");
+        divHeader.appendElement("h1").attr("class", "h1_custom").text("Projet PDL MIAGE");
+
+
+        Element divProfil = banner.appendElement("div").attr("class", "container");
+        divProfil.appendElement("h2").attr("class", "h2_custom").text("Notre équipe: ");
+        Element divRow = divProfil.appendElement("div").attr("class", "row text-center");
+
+        //Génération des cinq div membres
+        divRow.appendElement("div").attr("class", "col-md-1");
+        Element divAntoine = divRow.appendElement("div").attr("class", "col-md-2");
+        Element imgAntoine = divAntoine.appendElement("div").attr("class", "circular_antoine");
+        Element textAntoine = divAntoine.appendElement("span").attr("class", "span_nom").text("Antoine RAVET");
+        Element divAlexis = divRow.appendElement("div").attr("class", "col-md-2");
+        Element imgAlexis = divAlexis.appendElement("div").attr("class", "circular_alexis");
+        Element textAlexis = divAlexis.appendElement("span").attr("class", "span_nom").text("Alexis RENAULT");
+        Element divPL = divRow.appendElement("div").attr("class", "col-md-2");
+        Element imgPL = divPL.appendElement("div").attr("class", "circular_PL");
+        Element textPL= divPL.appendElement("span").attr("class", "span_nom").text("Pierre-Louis Ollivier");
+        Element divElina = divRow.appendElement("div").attr("class", "col-md-2");
+        Element imgElina = divElina.appendElement("div").attr("class", "circular_elina");
+        Element textElina = divElina.appendElement("span").attr("class", "span_nom").text("Elina LEPETIT");
+        Element divKilian = divRow.appendElement("div").attr("class", "col-md-2");
+        Element imgKilian = divKilian.appendElement("div").attr("class", "circular_kilian");
+        Element textKilain = divKilian.appendElement("span").attr("class", "span_nom").text("Kilian Guégan");
+        divRow.appendElement("div").attr("class", "col-md-1");
+
         // Create table
         Element table = body.appendElement("table").attr("border", "1");
-        table.addClass("table");
+        table.addClass("table table-striped table-hover");
 
         ExportMatrix exportMatrix = exportMatrixExporter.export(pcmContainer);
 
@@ -204,14 +238,13 @@ public class HTMLGenerate {
 
     private static void setTitleHtml(String pcmName){
         head.appendElement("title").text(pcmName);
-        body.appendElement("h1").text(pcmName);
     }
 
     public static void main(String[] args){
         try
         {
             // Ecriture du fichier HTML (écrase si le fichier existe déjà)
-            writeFile(export("pcms/simple-example.pcm"));
+            writeFile(export("pcms/example.pcm"));
         }catch (Exception e){
 
         }
