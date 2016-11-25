@@ -3,9 +3,7 @@ package org.opencompare;
 import org.opencompare.api.java.Cell;
 import org.opencompare.api.java.Feature;
 import org.opencompare.api.java.Value;
-import org.opencompare.api.java.impl.value.BooleanValueImpl;
-import org.opencompare.api.java.impl.value.RealValueImpl;
-import org.opencompare.api.java.impl.value.StringValueImpl;
+import org.opencompare.api.java.impl.value.*;
 import org.opencompare.api.java.value.BooleanValue;
 import org.opencompare.api.java.value.IntegerValue;
 import org.opencompare.api.java.value.RealValue;
@@ -107,16 +105,22 @@ public class FeatureViz {
     public List<Chart> getListCharts(){
         List<Chart> listChart = new ArrayList<Chart>();
 
-        if(this.typeSelected.getClass().equals(IntegerValue.class)){
+        // Dans le cas Integer / Multiple / Real
+        if(  this.typeSelected.getCanonicalName().equals(IntegerValueImpl.class) ||
+                this.typeSelected.getCanonicalName().equals(MultipleImpl.class) ||
+                this.typeSelected.getCanonicalName().equals(RealValueImpl.class) ){
             // Create chart
             // Histogramme
 
             // Diagramme en baton - on étudie la feature et le product
             // Aucun regroupement
-            listChart.add(new BarChart("barChart", "fa fa-barchart", this.typeSelected, false));
+            listChart.add(new BarChart("barChart", "fa fa-bar-chart", this.typeSelected, true));
 
-        } //else if (this.typeSelected instanceof StringValue || this.typeSelected instanceof BooleanValue){
-            else if (this.typeSelected.getCanonicalName().equals(StringValueImpl.class) || this.typeSelected.getCanonicalName().equals(BooleanValueImpl.class)){
+        }
+        // Dans le cas String / Boolean / Date
+        else if (this.typeSelected.getCanonicalName().equals(StringValueImpl.class) ||
+                this.typeSelected.getCanonicalName().equals(BooleanValueImpl.class) ||
+                this.typeSelected.getCanonicalName().equals(DateValueImpl.class) ){
             // Create chart
             if(getCountModalite() <= 5 ){
                 // Pie Chart
@@ -129,8 +133,14 @@ public class FeatureViz {
                 // regroupement
                 listChart.add(new BarChart("barChart", "fa fa-bar-chart", this.typeSelected, true));
             }
-        } else if(this.typeSelected.getCanonicalName().equals(RealValueImpl.class.getCanonicalName())){
-            listChart.add(new BarChart("barChart", "fa fa-bar-chart", this.typeSelected, true));
+        } else {
+            /*  conditionalValue
+                dimensionValue
+                partialValue
+                unitValue
+                versionvalue
+                notApplicable
+                notAvailable */
         }
 
         return listChart;
@@ -163,7 +173,6 @@ public class FeatureViz {
             cellContent = cellContent.replaceAll(" ", "_");
             // Suppression des accents
             cellContent = Normalizer.normalize(cellContent, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "");
-            System.out.print(cellContent);
 
             // Si la modalité n'est pas présente dans la liste de modalité
             if (!listModalite.contains(cellContent)) {

@@ -31,14 +31,16 @@ public class FeatureVizTest {
     public static void setUpBeforeClass() throws Exception {
         // Load a PCMS
         File pcmFile1 = new File("pcms/pcms_test_junit/Comparison_of_English_dictionaries_0.pcm");
-        File pcmFile2 = new File("pcms/Comparison_of_English_dictionaries_0.pcm");
+        File pcmFile2 = new File("pcms/pcms_test_junit/Comparison_of_mobile_Internet_Relay_Chat_clients_0.pcm");
 
         // Create a loader that can handle the file format
         PCMLoader loader = new KMFJSONLoader();
 
-        // Get the first PCM
+        // Get PCMS
         PCM pcm1 = loader.load(pcmFile1).get(0).getPcm();
+        PCM pcm2 = loader.load(pcmFile2).get(0).getPcm();
         listPcm.put("pcm1",pcm1);
+        listPcm.put("pcm2",pcm2);
     }
 
 
@@ -63,11 +65,12 @@ public class FeatureVizTest {
         Feature f;
         int nbModalite;
         FeatureViz featureViz;
+        List<Feature> listFeature;
 
-        // ----  TEST SUR LA PCM1 - English_dictionaries_0
+        // ----  TEST SUR LA PCM1 - English_dictionaries_0 - Test Basic avec peu de modalités
 
         // Browse the features of the PCM
-        List<Feature> listFeature = listPcm.get("pcm1").getConcreteFeatures();
+        listFeature = listPcm.get("pcm1").getConcreteFeatures();
         // Get the last feature - Pronunciation guide (String)
         f = listFeature.get(8);
         featureViz = new FeatureViz(f);
@@ -82,6 +85,18 @@ public class FeatureVizTest {
 
         assertEquals("Pcm English_dictionaries_0 - Nombre de modalité de la feature " + f.getName(), 4, nbModalite);
 
+
+        // ----  TEST SUR LA PCM1 - mobile_Internet_Relay_Chat_clients_0 - Test avec plus de modalités
+
+        listFeature = listPcm.get("pcm2").getConcreteFeatures();
+
+        // Get the feature - Computing platform
+        f = listFeature.get(0);
+        featureViz = new FeatureViz(f);
+        nbModalite = featureViz.getCountModalite();
+
+        assertEquals("Pcm mobile_Internet_Relay_Chat_clients_0 - Nombre de modalité de la feature " + f.getName(), 9, nbModalite);
+        System.out.println(f.getName());
     }
 
     @Test
