@@ -14,6 +14,7 @@ import org.opencompare.*;
 import org.opencompare.api.java.io.*;
 import org.opencompare.chart.Chart;
 
+import javax.management.Query;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -31,8 +32,9 @@ public class HTMLGenerate {
     private static FeatureVizFactory featureVizFactory = new FeatureVizFactory();
 
     //Données à envoyé au js
-    private static ArrayList<String> labels = new ArrayList<String>();
-    private static ArrayList<String> data = new ArrayList<String>();
+
+    private static ArrayList<String> labels = new ArrayList<>();
+    private static Hashtable<Integer, String> data = new Hashtable<Integer, String>();
 
 
     /**
@@ -131,7 +133,6 @@ public class HTMLGenerate {
         table.addClass("table table-striped table-hover");
 
         ExportMatrix exportMatrix = exportMatrixExporter.export(pcmContainer);
-
         for (int row = 0; row < exportMatrix.getNumberOfRows(); row++) {
             Element htmlRow = table.appendElement("tr");
 
@@ -143,13 +144,15 @@ public class HTMLGenerate {
                         htmlCell = htmlRow.appendElement("th");
                         //On ignore la première ligne
                         if(row >= 1){
-                            labels.add('"' + exportCell.getContent() + '"');
+                            labels.add( '"' + exportCell.getContent() + '"');
                         }
-
                     } else {
                         htmlCell = htmlRow.appendElement("td");
-                        data.add('"' + exportCell.getContent() + '"');
-
+                        if(data.get(column) != null){
+                            data.put(column, data.get(column) + ',' + '"' + exportCell.getContent() + '"');
+                        }else {
+                            data.put(column, '"' + exportCell.getContent() + '"');
+                        }
                     }
 
                     htmlCell.attr("style", "white-space: pre;");
@@ -167,16 +170,18 @@ public class HTMLGenerate {
             }
         }
 
-
         //Génératon de la dernière ligne : icone d'affichage des graphes
         Element dernierLigne = table.appendElement("tr");
         int indexFeature = 0;
         for(Feature f : pcmContainer.getPcm().getConcreteFeatures()){
+
+            //Dans tous les cas on crée un td mais il ne sera pas remplit pour le product
+            Element colonneGraph = dernierLigne.appendElement("td");
+
+            //On exclut le product pour l'algo suivant
             if(indexFeature>0){
-                Element colonneGraph = dernierLigne.appendElement("td");
 
                 colonneGraph.addClass("graph_cell");
-
                 //Algo récupération liste des charts
                 FeatureViz viz = featureVizFactory.makeFeatureViz(f);
                 Hashtable<Class<Value>, Integer> typesCollection = viz.getTypesFeature();
@@ -199,7 +204,7 @@ public class HTMLGenerate {
                 }
 
                 //Parcours de la liste des charts
-                for(Chart c : chartsList){
+                for(Chart c : chartsList) {
                     //System.out.println(data.toString());
                     //System.out.println(labels.toString());
 
@@ -212,15 +217,17 @@ public class HTMLGenerate {
                     c.getNameIcon();
                     Element lienChart = colonneGraph.appendElement("a");
                     lienChart.attr("data-type", c.getNameChart());
-                    lienChart.attr("data-data", data.toString());
+
+                    String tableauData = "[" + data.get(indexFeature) + "]";
+
+                    lienChart.attr("data-data", tableauData);
                     lienChart.attr("data-labels", labels.toString());
                     lienChart.addClass("GenereGraph");
                     Element iconeBarChart = lienChart.appendElement("i");
                     iconeBarChart.addClass(c.getNameIcon());
                 }
-                //On incrémente l'index
-
             }
+            //On incrémente l'index
             indexFeature++;
         }
 
@@ -293,7 +300,7 @@ public class HTMLGenerate {
         try
         {
             // Ecriture du fichier HTML (écrase si le fichier existe déjà)
-            writeFile(export("pcms/pcmPredominantType.pcm"));
+            writeFile(export("pcms/example.pcm"));
         }catch (Exception e){
 
         }

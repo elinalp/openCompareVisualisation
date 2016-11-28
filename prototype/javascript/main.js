@@ -2,9 +2,14 @@
 
 $( document ).ready(function() {
 
-    var divGraph = $("#myChart");
+
+
 
     $(".GenereGraph").click(function(event) {
+
+        $('#myChart').remove(); // this is my <canvas> element
+        $('body').append('<canvas id="myChart"><canvas>');
+        var canvas = $("#myChart");
         event.preventDefault();
         var type;
 
@@ -22,8 +27,9 @@ $( document ).ready(function() {
               default:
                   type = "bar";
         }
-        var myChart = new Chart(divGraph, {
-            type: "radar",
+
+        var myChart = new Chart(canvas, {
+            type: type,
             data: {
                 labels: $(this).data("labels"),
                 datasets: [{
@@ -58,7 +64,6 @@ $( document ).ready(function() {
                      ],
                 }]
             },
-
             options: {
                 scales: {
                     yAxes: [{

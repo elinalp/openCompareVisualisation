@@ -6,7 +6,9 @@
 		padding: 1em 4em 1em 4em;
 		margin-bottom: 20px;
 }
-
+h1{
+text-align:center;
+}
 .h1_custom{
     text-align:center;
 }
