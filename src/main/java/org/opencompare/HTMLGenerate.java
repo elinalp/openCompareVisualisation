@@ -6,6 +6,7 @@ import org.jsoup.nodes.Entities;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.parser.Tag;
 import org.opencompare.api.java.*;
+import org.opencompare.api.java.impl.FeatureImpl;
 import org.opencompare.api.java.impl.ValueImpl;
 import org.opencompare.api.java.impl.io.KMFJSONLoader;
 import org.opencompare.api.java.util.Pair;
@@ -28,6 +29,12 @@ public class HTMLGenerate {
     private static Element head = doc.head();
     private static Element body = doc.body();
     private static FeatureVizFactory featureVizFactory = new FeatureVizFactory();
+
+    //Données à envoyé au js
+    private static ArrayList<String> labels = new ArrayList<String>();
+    private static ArrayList<String> data = new ArrayList<String>();
+
+
     /**
      * Crée l'entête du document HTML
      */
@@ -60,7 +67,10 @@ public class HTMLGenerate {
         linkChartist.attr("href", "/getting-started/chartist/chartist.min.css");
 
         Element scriptChartist =  head.appendElement("script");
-        scriptChartist.attr("src" ,"/getting-started/chartist/chartist.min.js");
+        scriptChartist.attr("src" ,"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js");
+
+        Element scriptChartist2 =  head.appendElement("script");
+        scriptChartist.attr("src" ,"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js");
 
         //Ajout Font Awesome
         Element linkFont = head.appendElement("link");
@@ -127,13 +137,19 @@ public class HTMLGenerate {
 
             for (int column = 0; column < exportMatrix.getNumberOfColumns(); column++) {
                 ExportCell exportCell = exportMatrix.getCell(row, column);
-
                 if (exportCell != null) {
                     Element htmlCell;
                     if (exportCell.isFeature() || exportCell.isInProductsKeyColumn()) {
                         htmlCell = htmlRow.appendElement("th");
+                        //On ignore la première ligne
+                        if(row >= 1){
+                            labels.add('"' + exportCell.getContent() + '"');
+                        }
+
                     } else {
                         htmlCell = htmlRow.appendElement("td");
+                        data.add('"' + exportCell.getContent() + '"');
+
                     }
 
                     htmlCell.attr("style", "white-space: pre;");
@@ -154,42 +170,66 @@ public class HTMLGenerate {
 
         //Génératon de la dernière ligne : icone d'affichage des graphes
         Element dernierLigne = table.appendElement("tr");
-        //dernierLigne.appendElement("td");
+        int indexFeature = 0;
         for(Feature f : pcmContainer.getPcm().getConcreteFeatures()){
-            Element colonneGraph = dernierLigne.appendElement("td");
-            colonneGraph.addClass("graph_cell");
+            if(indexFeature>0){
+                Element colonneGraph = dernierLigne.appendElement("td");
 
-            //Algo récupération liste des charts
-            FeatureViz viz = featureVizFactory.makeFeatureViz(f);
-            Hashtable<Class<Value>, Integer> typesCollection = viz.getTypesFeature();
-            Feature2TypeConfig f2tc = new Feature2TypeConfig(typesCollection);
-            Class<Value> valuePredominant = f2tc.getPredominantType();
-            viz.setTypeSelected(valuePredominant);
-            List<Chart> chartsList = viz.getListCharts();
-            System.out.println(chartsList.size());
+                colonneGraph.addClass("graph_cell");
 
-            //Parcours de la liste des charts
-            for(Chart c : chartsList){
-                // Antoine pour chaque Chart c
-                // Le type des feature a choisir pour le graphique ? ( Surement afficher pour chaque cellules le type
-                // Si il y a plusieurs type de données dans le feature on prend uniqement les données associé a c.getFeatureType();
-                // Quelque chose comme ca : data-cell-type = cell.getInterpretation()
-                c.getFeatureType();
-                c.getNameChart();
-                c.getNameIcon();
+                //Algo récupération liste des charts
+                FeatureViz viz = featureVizFactory.makeFeatureViz(f);
+                Hashtable<Class<Value>, Integer> typesCollection = viz.getTypesFeature();
+                Feature2TypeConfig f2tc = new Feature2TypeConfig(typesCollection);
+                Class<Value> valuePredominant = f2tc.getPredominantType();
+                viz.setTypeSelected(valuePredominant);
+                List<Chart> chartsList = viz.getListCharts();
 
-                Element lienChart = colonneGraph.appendElement("a");
-                lienChart.attr("data-type", c.getNameChart());
-                lienChart.addClass("GenereGraph");
-                Element iconeBarChart = lienChart.appendElement("i");
-                iconeBarChart.addClass(c.getNameIcon());
+                //Parcours des cell de chaque feature
+                // Récupère la liste des cellules de la feature
+                List<Cell> listCells = f.getCells();
+                // Parcours de la liste des cellules
+                Iterator iterator = listCells.iterator();
+                Value cellValue = null;
+                while (iterator.hasNext()) {
+                    Cell c = (Cell) iterator.next();
+
+                    // Récupération du type de la cellule
+                    cellValue =  c.getInterpretation();
+                }
+
+                //Parcours de la liste des charts
+                for(Chart c : chartsList){
+                    //System.out.println(data.toString());
+                    //System.out.println(labels.toString());
+
+                    // Antoine pour chaque Chart c
+                    // Le type des feature a choisir pour le graphique ? ( Surement afficher pour chaque cellules le type
+                    // Si il y a plusieurs type de données dans le feature on prend uniqement les données associé a c.getFeatureType();
+                    // Quelque chose comme ca : data-cell-type = cell.getInterpretation()
+                    c.getFeatureType();
+                    c.getNameChart();
+                    c.getNameIcon();
+                    Element lienChart = colonneGraph.appendElement("a");
+                    lienChart.attr("data-type", c.getNameChart());
+                    lienChart.attr("data-data", data.toString());
+                    lienChart.attr("data-labels", labels.toString());
+                    lienChart.addClass("GenereGraph");
+                    Element iconeBarChart = lienChart.appendElement("i");
+                    iconeBarChart.addClass(c.getNameIcon());
+                }
+                //On incrémente l'index
+
             }
+            indexFeature++;
         }
 
 
         //Div pour la création de graphe
-        Element divGraph = body.appendElement("div");
-        divGraph.addClass("ct-chart ct-perfect-fourth");
+        Element divGraph = body.appendElement("canvas");
+        divGraph.attr("id", "myChart");
+        divGraph.attr("width", "400");
+        divGraph.attr("height", "400");
     }
 
 
@@ -253,7 +293,7 @@ public class HTMLGenerate {
         try
         {
             // Ecriture du fichier HTML (écrase si le fichier existe déjà)
-            writeFile(export("pcms/simple-example.pcm"));
+            writeFile(export("pcms/pcmPredominantType.pcm"));
         }catch (Exception e){
 
         }

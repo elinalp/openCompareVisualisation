@@ -104,11 +104,10 @@ public class FeatureViz {
      */
     public List<Chart> getListCharts(){
         List<Chart> listChart = new ArrayList<Chart>();
-
         // Dans le cas Integer / Multiple / Real
-        if(  this.typeSelected.getCanonicalName().equals(IntegerValueImpl.class) ||
-                this.typeSelected.getCanonicalName().equals(MultipleImpl.class) ||
-                this.typeSelected.getCanonicalName().equals(RealValueImpl.class) ){
+        if(  this.typeSelected.getCanonicalName().equals(IntegerValueImpl.class.getCanonicalName()) ||
+                this.typeSelected.getCanonicalName().equals(MultipleImpl.class.getCanonicalName()) ||
+                this.typeSelected.getCanonicalName().equals(RealValueImpl.class.getCanonicalName()) ){
             // Create chart
             // Histogramme
 
@@ -118,9 +117,9 @@ public class FeatureViz {
 
         }
         // Dans le cas String / Boolean / Date
-        else if (this.typeSelected.getCanonicalName().equals(StringValueImpl.class) ||
-                this.typeSelected.getCanonicalName().equals(BooleanValueImpl.class) ||
-                this.typeSelected.getCanonicalName().equals(DateValueImpl.class) ){
+        else if (this.typeSelected.getCanonicalName().equals(StringValueImpl.class.getCanonicalName()) ||
+                this.typeSelected.getCanonicalName().equals(BooleanValueImpl.class.getCanonicalName()) ||
+                this.typeSelected.getCanonicalName().equals(DateValueImpl.class.getCanonicalName()) ){
             // Create chart
             if(getCountModalite() <= 5 ){
                 // Pie Chart
