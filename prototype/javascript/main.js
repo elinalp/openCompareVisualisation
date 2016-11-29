@@ -12,6 +12,8 @@ $( document ).ready(function() {
         var canvas = $("#myChart");
         event.preventDefault();
         var type;
+        var data = $(this).data("data");
+        var labels = $(this).data("labels");
 
           //On définit le type de graphique
         switch($(this).data("type")) {
@@ -19,6 +21,20 @@ $( document ).ready(function() {
                   type = "bar";
                   break;
               case "pieChart":
+                  data = $(this).data("data");
+                  var tableauFinal = new Array;
+                  var tableauLabel = new Array;
+                  $.each($(this).data("data"), function( index, value ) {
+                    var nbOccur = data.filter(function (elem) {
+                        return elem === value;
+                    }).length;
+                    if (tableauLabel.indexOf(value) === -1) {
+                      tableauFinal.push(nbOccur);
+                      tableauLabel.push(value);
+                    }
+                  });
+                  data = tableauFinal;
+                  labels = tableauLabel;
                   type = "pie";
                   break;
               case "polarChart":
@@ -31,9 +47,9 @@ $( document ).ready(function() {
         var myChart = new Chart(canvas, {
             type: type,
             data: {
-                labels: $(this).data("labels"),
+                labels: labels,
                 datasets: [{
-                    data: $(this).data("data"),
+                    data: data,
                     borderWidth: 1,
                     backgroundColor:
                      [

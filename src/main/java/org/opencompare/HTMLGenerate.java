@@ -300,7 +300,7 @@ public class HTMLGenerate {
         try
         {
             // Ecriture du fichier HTML (écrase si le fichier existe déjà)
-            writeFile(export("pcms/example.pcm"));
+            writeFile(export("pcms/pcms_test_junit/Comparison_of_English_dictionaries_0.pcm"));
         }catch (Exception e){
 
         }
