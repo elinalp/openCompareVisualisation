@@ -118,10 +118,11 @@ public class FeatureViz {
             listChart.add(new BarChart("barChart", "fa fa-bar-chart", this.typeSelected, true));
 
         }
-        // Dans le cas String / Boolean / Date
+        // Dans le cas String / Boolean / Date / Version Value
         else if (this.typeSelected.getCanonicalName().equals(StringValueImpl.class.getCanonicalName()) ||
                 this.typeSelected.getCanonicalName().equals(BooleanValueImpl.class.getCanonicalName()) ||
-                this.typeSelected.getCanonicalName().equals(DateValueImpl.class.getCanonicalName()) ){
+                this.typeSelected.getCanonicalName().equals(DateValueImpl.class.getCanonicalName()) ||
+                this.typeSelected.getCanonicalName().equals(VersionImpl.class.getCanonicalName())){
             // Create chart
             if(getCountModalite() <= 5 ){
                 // Pie Chart
@@ -135,14 +136,16 @@ public class FeatureViz {
                 listChart.add(new BarChart("barChart", "fa fa-bar-chart", this.typeSelected, true));
             }
         } else {
-            // Aucun chart de creer pour ces valeurs
+
+            /* Aucun graphique
+               - notApplicable
+               - notAvailable */
+
+            // TODO - Pour ces valeurs associer un/plusieurs graphique(s)
             /*  conditionalValue
                 dimensionValue
                 partialValue
-                unitValue
-                versionvalue
-                notApplicable
-                notAvailable */
+                unitValue */
         }
 
         return listChart;

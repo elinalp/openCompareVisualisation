@@ -1,9 +1,3 @@
-## Generate a html page
-
-To launch the generation of html page,
-* Choose a pcm on the main HTMLGenerate.java
-* Run the HTMLGenerate.java
-
 ## Project
 
 * pcms : contains pcm file
@@ -17,6 +11,12 @@ To launch the generation of html page,
 ** main.java.org.openCompare
 ** main.java.org.openCompare.test
 
+## Generate a html page
+
+To launch the generation of html page,
+* Choose a pcm on the main HTMLGenerate.java
+* Run the HTMLGenerate.java
+* Open simple-example.html on browser
 
 ## Development tools
 
