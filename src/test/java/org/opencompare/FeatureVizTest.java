@@ -140,40 +140,28 @@ public class FeatureVizTest {
     @Test
     public void testGetCountModalite() throws IOException {
 
-        Feature f;
-        int nbModalite;
-        FeatureViz featureViz;
         List<Feature> listFeature;
+        FeatureViz featureViz;
+        int nbModalite;
 
-        // ----  TEST SUR LA PCM1 - English_dictionaries_0 - Test Basic avec peu de modalités
+        // TEST PCM  ALL_TYPES
+        listFeature = listPcm.get("pcm_all_types").getConcreteFeatures();
 
-        // Browse the features of the PCM
-        listFeature = listPcm.get("pcm1").getConcreteFeatures();
-        // Get the last feature - Pronunciation guide (String)
-        f = listFeature.get(8);
-        featureViz = new FeatureViz(f);
-        nbModalite = featureViz.getCountModalite();
+        for (Feature feature : listFeature) {
 
-        assertEquals("Pcm English_dictionaries_0 - Nombre de modalité de la feature " + f.getName(), 2, nbModalite);
-
-        // Get the feature - Year (Integer)
-        f = listFeature.get(4);
-        featureViz = new FeatureViz(f);
-        nbModalite = featureViz.getCountModalite();
-
-        assertEquals("Pcm English_dictionaries_0 - Nombre de modalité de la feature " + f.getName(), 4, nbModalite);
-
-
-        // ----  TEST SUR LA PCM1 - mobile_Internet_Relay_Chat_clients_0 - Test avec plus de modalités
-
-        listFeature = listPcm.get("pcm2").getConcreteFeatures();
-
-        // Get the feature - Computing platform
-        f = listFeature.get(0);
-        featureViz = new FeatureViz(f);
-        nbModalite = featureViz.getCountModalite();
-
-        assertEquals("Pcm mobile_Internet_Relay_Chat_clients_0 - Nombre de modalité de la feature " + f.getName(), 9, nbModalite);
+            switch (feature.getName()) {
+                case "moda_sup":
+                    featureViz = new FeatureViz(feature);
+                    nbModalite = featureViz.getCountModalite();
+                    assertEquals("Matrice correcte - Nombre de modalité de la feature " + feature.getName(), 7, nbModalite);
+                    break;
+                case "moda_inf":
+                    featureViz = new FeatureViz(feature);
+                    nbModalite = featureViz.getCountModalite();
+                    assertEquals("Matrice correcte - Nombre de modalité de la feature " + feature.getName(), 4, nbModalite);
+                    break;
+            }
+        }
     }
 
     @Test
