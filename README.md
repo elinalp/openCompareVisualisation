@@ -1,70 +1,31 @@
-# Getting started with OpenCompare
+## Generate a html page
 
-Examples for using OpenCompare API and services
+To launch the generation of html page,
+* Choose a pcm on the main HTMLGenerate.java
+* Run the HTMLGenerate.java
 
-## Import a PCM
-1- Define the file that you want to load.
+## Project
 
-2- Create a loader that can handle the file format. 
-In our example, we use the KMFJSONLoader which supports the internal representation of OpenCompare.
+* pcms : contains pcm file
+* pcms/pcms_test_junit : contains csv file for test
+* prototype : contains webpage and dependencies
+** prototype/css :
+** prototype/html :
+** prototype/javascript :
 
-3- Load the file. 
-A loader returns a list of PCM containers as a file may contain multiple PCMs.
-A PCM container encapsulates a PCM and its associated metadata (e.g. position of the products and features, source of the information, author of the PCM).
-
-4- Iterate over the PCM containers to get the loaded PCMs
-
-```java
-File pcmFile = new File("pcms/example.pcm");
-PCMLoader loader = new KMFJSONLoader();
-List<PCMContainer> pcmContainers = loader.load(pcmFile);
-for (PCMContainer pcmContainer : pcmContainers) {
-  PCM pcm = pcmContainer.getPcm();
-}
-```
-
-## Browse a PCM
-
-### Using the API
-```java
-// Browse the cells of the PCM
-for (Product product : pcm.getProducts()) {
-  for (Feature feature : pcm.getConcreteFeatures()) {
-    // Find the cell corresponding to the current feature and product
-    Cell cell = product.findCell(feature);
-
-    // Get information contained in the cell
-    String content = cell.getContent();
-    String rawContent = cell.getRawContent();
-    Value interpretation = cell.getInterpretation();
-
-    // Print the content of the cell
-    System.out.println("(" + product.getName() + ", " + feature.getName() + ") = " + content);
-  }
-}
-```
-### Using a visitor
-See src/test/java/org.opencompare/VisitorTest.java
-
-## Export
-If we want to export or serialize the PCM to a specific format, we can use a PCMExporter.
-In this example, we export our PCM to a CSV file.
-
-```java
-CSVExporter csvExporter = new CSVExporter();
-String csv = csvExporter.export(pcmContainer);
-```
-
-## Import 
-
-If we want to import a PCM from a CSV file, we can use a CSVLoader.
-
-```java
-CSVLoader csvL = new CSVLoader(
-                new PCMFactoryImpl(),
-                new CellContentInterpreter(new PCMFactoryImpl()));
-List<PCMContainer> pcms = csvL.load(new File("pcms/pokemon.csv"));
-...
-```
+* src : implementation API
+** main.java.org.openCompare
+** main.java.org.openCompare.test
 
 
+## Development tools
+
+* [IntelliJ] (https://www.jetbrains.com/idea/)
+* [Maven](https://maven.apache.org/)
+
+## Frameworks and dependencies
+
+* [Junit4] (http://junit.org/junit4/)
+* [Chart js](http://www.chartjs.org/)
+* [Jquery] (https://jquery.com/)
+* [Font awesome](http://fontawesome.io/)
