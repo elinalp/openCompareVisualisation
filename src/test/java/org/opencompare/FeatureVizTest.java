@@ -182,28 +182,22 @@ public class FeatureVizTest {
 
         for (Feature feature : listFeature) {
 
+            featureViz = new FeatureViz(feature);
+
+            //Algo récupération liste des chart
+            featureType = featureViz.getTypesFeature();
+            f2tc = new Feature2TypeConfig(featureType);
+            featureViz.setTypeSelected(f2tc.getPredominantType());
+            listChart = featureViz.getListCharts();
+
             switch (feature.getName()) {
                 case "moda_sup":
-                    featureViz = new FeatureViz(feature);
-
-                    //Algo récupération liste des chart
-                    featureType = featureViz.getTypesFeature();
-                    f2tc = new Feature2TypeConfig(featureType);
-                    featureViz.setTypeSelected(f2tc.getPredominantType());
-                    listChart = featureViz.getListCharts();
 
                     assertEquals("Matrice correcte - Liste de charts - Taille - Feature " + feature.getName(), listChart.size(), 1);
                     assertEquals("Matrice correcte - Liste de charts - Name chart - Feature " + feature.getName(), listChart.get(0).getNameChart(), "barChart");
                     break;
 
                 case "moda_inf":
-                    featureViz = new FeatureViz(feature);
-
-                    //Algo récupération liste des chart
-                    featureType = featureViz.getTypesFeature();
-                    f2tc = new Feature2TypeConfig(featureType);
-                    featureViz.setTypeSelected(f2tc.getPredominantType());
-                    listChart = featureViz.getListCharts();
 
                     assertEquals("Matrice correcte - Liste de charts - Taille - Feature " + feature.getName(), listChart.size(), 2);
                     assertEquals("Matrice correcte - Liste de charts - Name chart - Feature " + feature.getName(), listChart.get(0).getNameChart(), "pieChart");
@@ -211,13 +205,6 @@ public class FeatureVizTest {
                     break;
 
                 case "boolean":
-                    featureViz = new FeatureViz(feature);
-
-                    //Algo récupération liste des chart
-                    featureType = featureViz.getTypesFeature();
-                    f2tc = new Feature2TypeConfig(featureType);
-                    featureViz.setTypeSelected(f2tc.getPredominantType());
-                    listChart = featureViz.getListCharts();
 
                     assertEquals("Matrice correcte - Liste de charts - Taille - Feature " + feature.getName(), listChart.size(), 2);
                     assertEquals("Matrice correcte - Liste de charts - Name chart - Feature " + feature.getName(), listChart.get(0).getNameChart(), "pieChart");
@@ -225,39 +212,18 @@ public class FeatureVizTest {
                     break;
 
                 case "reel":
-                    featureViz = new FeatureViz(feature);
-
-                    //Algo récupération liste des chart
-                    featureType = featureViz.getTypesFeature();
-                    f2tc = new Feature2TypeConfig(featureType);
-                    featureViz.setTypeSelected(f2tc.getPredominantType());
-                    listChart = featureViz.getListCharts();
 
                     assertEquals("Matrice correcte - Liste de charts - Taille - Feature " + feature.getName(), listChart.size(), 1);
                     assertEquals("Matrice correcte - Liste de charts - Name chart - Feature " + feature.getName(), listChart.get(0).getNameChart(), "barChart");
                     break;
 
                 case "integer":
-                    featureViz = new FeatureViz(feature);
-
-                    //Algo récupération liste des chart
-                    featureType = featureViz.getTypesFeature();
-                    f2tc = new Feature2TypeConfig(featureType);
-                    featureViz.setTypeSelected(f2tc.getPredominantType());
-                    listChart = featureViz.getListCharts();
 
                     assertEquals("Matrice correcte - Liste de charts - Taille - Feature " + feature.getName(), listChart.size(), 1);
                     assertEquals("Matrice correcte - Liste de charts - Name chart - Feature " + feature.getName(), listChart.get(0).getNameChart(), "barChart");
 
                     break;
                 case "multiple":
-                    featureViz = new FeatureViz(feature);
-
-                    //Algo récupération liste des chart
-                    featureType = featureViz.getTypesFeature();
-                    f2tc = new Feature2TypeConfig(featureType);
-                    featureViz.setTypeSelected(f2tc.getPredominantType());
-                    listChart = featureViz.getListCharts();
 
                     assertEquals("Matrice correcte - Liste de charts - Taille - Feature " + feature.getName(), listChart.size(), 1);
                     assertEquals("Matrice correcte - Liste de charts - Name chart - Feature " + feature.getName(), listChart.get(0).getNameChart(), "barChart");
@@ -265,18 +231,10 @@ public class FeatureVizTest {
                     break;
 
                 case "empty":
-                    featureViz = new FeatureViz(feature);
-
-                    //Algo récupération liste des chart
-                    featureType = featureViz.getTypesFeature();
-                    f2tc = new Feature2TypeConfig(featureType);
-                    featureViz.setTypeSelected(f2tc.getPredominantType());
-                    listChart = featureViz.getListCharts();
 
                     assertEquals("Matrice correcte - Liste de charts - Taille - Feature " + feature.getName(), listChart.size(), 0);
                     break;
             }
         }
     }
-
 }
