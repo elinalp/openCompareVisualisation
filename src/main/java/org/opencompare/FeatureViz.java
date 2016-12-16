@@ -110,6 +110,8 @@ public class FeatureViz {
                 this.typeSelected.getCanonicalName().equals(RealValueImpl.class.getCanonicalName()) ){
             // Create chart
             // Histogramme
+            // TODO - ajouter le graphique histogramme dans le cas d'une implementation non statique
+            // Calculs présent dans le cahier des charges
 
             // Diagramme en baton - on étudie la feature et le product
             // Aucun regroupement
@@ -133,6 +135,7 @@ public class FeatureViz {
                 listChart.add(new BarChart("barChart", "fa fa-bar-chart", this.typeSelected, true));
             }
         } else {
+            // Aucun chart de creer pour ces valeurs
             /*  conditionalValue
                 dimensionValue
                 partialValue
