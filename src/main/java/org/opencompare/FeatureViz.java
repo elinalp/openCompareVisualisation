@@ -111,7 +111,7 @@ public class FeatureViz {
             // Create chart
             // Histogramme
             // TODO - ajouter le graphique histogramme dans le cas d'une implementation non statique
-            // Calculs présent dans le cahier des charges
+            // Calculs présents dans le cahier des charges
 
             // Diagramme en baton - on étudie la feature et le product
             // Aucun regroupement

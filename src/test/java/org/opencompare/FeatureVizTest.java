@@ -26,6 +26,9 @@ public class FeatureVizTest {
      */
     private static HashMap<String, PCM> listPcm = new HashMap<>();
 
+    /**
+     * Chargement de des matrices
+     */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
 
@@ -41,6 +44,9 @@ public class FeatureVizTest {
     }
 
 
+    /**
+     * Test de la méthode getTypesFeature
+     */
     @Test
     public void testGetTypesFeature() throws IOException {
 
@@ -126,6 +132,9 @@ public class FeatureVizTest {
         }
     }
 
+    /**
+     * Test de la méthode getCountModalite
+     */
     @Test
     public void testGetCountModalite() throws IOException {
 
@@ -153,11 +162,13 @@ public class FeatureVizTest {
         }
     }
 
-    @Test
+
     /**
-     * Ce test est le dernier a executer
-     * Il utilise des methodes de la classe Feature2TypeConfig
+     * Test de la méthode getListCharts
+     * Ce test est le dernier a être executé
+     * Cette méthode utilise des methodes de la classe Feature2TypeConfig
      */
+    @Test
     public void testGetListCharts() throws IOException {
 
         List<Feature> listFeature;
