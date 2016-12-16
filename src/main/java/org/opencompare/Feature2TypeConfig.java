@@ -24,13 +24,13 @@ public class Feature2TypeConfig {
      */
     public Class<Value> getRandomType(){
         List<Class<Value>> randomList = new ArrayList<Class<Value>>();
-
         Random rand = new Random();
-        int randomIndexTab = rand.nextInt(collectionTypesFeature.size());
 
         for(Class<Value> c : collectionTypesFeature.keySet()){
             randomList.add(c);
         }
+
+        int randomIndexTab = rand.nextInt(randomList.size());
         return randomList.get(randomIndexTab);
     }
 
@@ -40,22 +40,19 @@ public class Feature2TypeConfig {
      * @return une instance Class<Value>,qui correspond la classe Value prédominante de la feature
      */
     public Class<Value> getPredominantType(){
-        Iterator<Class<Value>> it = collectionTypesFeature.keySet().iterator();
         int nbOccurenceMax = 0;
         int nbOccurenceCurrent = 0;
         Class<Value> predominantValue = null;
 
-        while(it.hasNext()){
-            Class<Value> cle = it.next();
-            nbOccurenceCurrent = collectionTypesFeature.get(cle);
-            if(nbOccurenceMax < nbOccurenceCurrent){
-                nbOccurenceMax = nbOccurenceCurrent;
-                predominantValue = cle;
-            }
+        for(Class<Value> c : collectionTypesFeature.keySet()){
+                nbOccurenceCurrent = collectionTypesFeature.get(c);
+                if(nbOccurenceMax < nbOccurenceCurrent){
+                    nbOccurenceMax = nbOccurenceCurrent;
+                    predominantValue = c;
+                }
         }
         return predominantValue;
     }
-
 
     public void setCollectionTypesFeature(Hashtable<Class<Value>, Integer> collect){
         collectionTypesFeature = collect;
