@@ -4,8 +4,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.opencompare.api.java.Feature;
 import org.opencompare.api.java.PCM;
+import org.opencompare.api.java.PCMContainer;
 import org.opencompare.api.java.Value;
+import org.opencompare.api.java.extractor.CellContentInterpreter;
+import org.opencompare.api.java.impl.PCMFactoryImpl;
 import org.opencompare.api.java.impl.io.KMFJSONLoader;
+import org.opencompare.api.java.io.CSVLoader;
 import org.opencompare.api.java.io.PCMLoader;
 
 import java.io.File;
@@ -29,18 +33,14 @@ public class FeatureVizTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        // Load a PCMS
-        File pcmFile1 = new File("pcms/pcms_test_junit/Comparison_of_English_dictionaries_0.pcm");
-        File pcmFile2 = new File("pcms/pcms_test_junit/Comparison_of_mobile_Internet_Relay_Chat_clients_0.pcm");
 
         // Create a loader that can handle the file format
-        PCMLoader loader = new KMFJSONLoader();
+        CSVLoader csvL = new CSVLoader(new PCMFactoryImpl(), new CellContentInterpreter(new PCMFactoryImpl()));
 
-        // Get PCMS
-        PCM pcm1 = loader.load(pcmFile1).get(0).getPcm();
-        PCM pcm2 = loader.load(pcmFile2).get(0).getPcm();
-        listPcm.put("pcm1",pcm1);
-        listPcm.put("pcm2",pcm2);
+        // Load Get PCMS
+        PCM pcm1 = csvL.load(new File("pcms/pcms_test_junit/matrice_all_type.csv")).get(0).getPcm();
+
+        listPcm.put("pcm1", pcm1);
     }
 
 
@@ -49,12 +49,13 @@ public class FeatureVizTest {
 
         // Browse the features of the PCM
         List<Feature> listFeature = listPcm.get("pcm1").getConcreteFeatures();
-
-        // Get the seconde feature
-        Feature f = listFeature.get(8);
+        Feature f = listFeature.get(1);
         FeatureViz featureViz = new FeatureViz(f);
 
         Hashtable<Class<Value>, Integer> listeFeature = featureViz.getTypesFeature();
+
+        System.out.print(listeFeature.size());
+
 
 
     }
@@ -96,7 +97,6 @@ public class FeatureVizTest {
         nbModalite = featureViz.getCountModalite();
 
         assertEquals("Pcm mobile_Internet_Relay_Chat_clients_0 - Nombre de modalité de la feature " + f.getName(), 9, nbModalite);
-        System.out.println(f.getName());
     }
 
     @Test
