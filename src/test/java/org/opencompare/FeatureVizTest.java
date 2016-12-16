@@ -4,26 +4,15 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.opencompare.api.java.Feature;
 import org.opencompare.api.java.PCM;
-import org.opencompare.api.java.PCMContainer;
 import org.opencompare.api.java.Value;
 import org.opencompare.api.java.extractor.CellContentInterpreter;
 import org.opencompare.api.java.impl.PCMFactoryImpl;
-import org.opencompare.api.java.impl.io.KMFJSONLoader;
 import org.opencompare.api.java.io.CSVLoader;
-import org.opencompare.api.java.io.PCMLoader;
-import org.opencompare.api.java.value.BooleanValue;
-import org.opencompare.api.java.value.StringValue;
-import org.opencompare.api.java.Value;
 import org.opencompare.api.java.impl.value.*;
-import scala.Int;
-
+import org.opencompare.chart.Chart;
 import java.io.File;
-
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-
+import java.util.*;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
@@ -165,8 +154,118 @@ public class FeatureVizTest {
     }
 
     @Test
+    /**
+     * Ce test est le dernier a executer
+     * Il utilise des methodes de la classe Feature2TypeConfig
+     */
     public void testGetListCharts() throws IOException {
 
+        List<Feature> listFeature;
+        Hashtable<Class<Value>, Integer> featureType;
+        Feature2TypeConfig f2tc;
+        FeatureViz featureViz;
+        List<Chart> listChart;
+
+        // TEST PCM  ALL_TYPES
+        listFeature = listPcm.get("pcm_all_types").getConcreteFeatures();
+
+        for (Feature feature : listFeature) {
+
+            switch (feature.getName()) {
+                case "moda_sup":
+                    featureViz = new FeatureViz(feature);
+
+                    //Algo récupération liste des chart
+                    featureType = featureViz.getTypesFeature();
+                    f2tc = new Feature2TypeConfig(featureType);
+                    featureViz.setTypeSelected(f2tc.getPredominantType());
+                    listChart = featureViz.getListCharts();
+
+                    assertEquals("Matrice correcte - Liste de charts - Taille - Feature " + feature.getName(), listChart.size(), 1);
+                    assertEquals("Matrice correcte - Liste de charts - Name chart - Feature " + feature.getName(), listChart.get(0).getNameChart(), "barChart");
+                    break;
+
+                case "moda_inf":
+                    featureViz = new FeatureViz(feature);
+
+                    //Algo récupération liste des chart
+                    featureType = featureViz.getTypesFeature();
+                    f2tc = new Feature2TypeConfig(featureType);
+                    featureViz.setTypeSelected(f2tc.getPredominantType());
+                    listChart = featureViz.getListCharts();
+
+                    assertEquals("Matrice correcte - Liste de charts - Taille - Feature " + feature.getName(), listChart.size(), 2);
+                    assertEquals("Matrice correcte - Liste de charts - Name chart - Feature " + feature.getName(), listChart.get(0).getNameChart(), "pieChart");
+                    assertEquals("Matrice correcte - Liste de charts - Name chart - Feature " + feature.getName(), listChart.get(1).getNameChart(), "polarChart");
+                    break;
+
+                case "boolean":
+                    featureViz = new FeatureViz(feature);
+
+                    //Algo récupération liste des chart
+                    featureType = featureViz.getTypesFeature();
+                    f2tc = new Feature2TypeConfig(featureType);
+                    featureViz.setTypeSelected(f2tc.getPredominantType());
+                    listChart = featureViz.getListCharts();
+
+                    assertEquals("Matrice correcte - Liste de charts - Taille - Feature " + feature.getName(), listChart.size(), 2);
+                    assertEquals("Matrice correcte - Liste de charts - Name chart - Feature " + feature.getName(), listChart.get(0).getNameChart(), "pieChart");
+                    assertEquals("Matrice correcte - Liste de charts - Name chart - Feature " + feature.getName(), listChart.get(1).getNameChart(), "polarChart");
+                    break;
+
+                case "reel":
+                    featureViz = new FeatureViz(feature);
+
+                    //Algo récupération liste des chart
+                    featureType = featureViz.getTypesFeature();
+                    f2tc = new Feature2TypeConfig(featureType);
+                    featureViz.setTypeSelected(f2tc.getPredominantType());
+                    listChart = featureViz.getListCharts();
+
+                    assertEquals("Matrice correcte - Liste de charts - Taille - Feature " + feature.getName(), listChart.size(), 1);
+                    assertEquals("Matrice correcte - Liste de charts - Name chart - Feature " + feature.getName(), listChart.get(0).getNameChart(), "barChart");
+                    break;
+
+                case "integer":
+                    featureViz = new FeatureViz(feature);
+
+                    //Algo récupération liste des chart
+                    featureType = featureViz.getTypesFeature();
+                    f2tc = new Feature2TypeConfig(featureType);
+                    featureViz.setTypeSelected(f2tc.getPredominantType());
+                    listChart = featureViz.getListCharts();
+
+                    assertEquals("Matrice correcte - Liste de charts - Taille - Feature " + feature.getName(), listChart.size(), 1);
+                    assertEquals("Matrice correcte - Liste de charts - Name chart - Feature " + feature.getName(), listChart.get(0).getNameChart(), "barChart");
+
+                    break;
+                case "multiple":
+                    featureViz = new FeatureViz(feature);
+
+                    //Algo récupération liste des chart
+                    featureType = featureViz.getTypesFeature();
+                    f2tc = new Feature2TypeConfig(featureType);
+                    featureViz.setTypeSelected(f2tc.getPredominantType());
+                    listChart = featureViz.getListCharts();
+
+                    assertEquals("Matrice correcte - Liste de charts - Taille - Feature " + feature.getName(), listChart.size(), 1);
+                    assertEquals("Matrice correcte - Liste de charts - Name chart - Feature " + feature.getName(), listChart.get(0).getNameChart(), "barChart");
+
+                    break;
+
+                case "empty":
+                    featureViz = new FeatureViz(feature);
+
+                    //Algo récupération liste des chart
+                    featureType = featureViz.getTypesFeature();
+                    f2tc = new Feature2TypeConfig(featureType);
+                    featureViz.setTypeSelected(f2tc.getPredominantType());
+                    listChart = featureViz.getListCharts();
+
+                    assertEquals("Matrice correcte - Liste de charts - Taille - Feature " + feature.getName(), listChart.size(), 0);
+                    break;
+            }
+        }
     }
 
 }
