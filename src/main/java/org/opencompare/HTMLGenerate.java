@@ -105,19 +105,14 @@ public class HTMLGenerate {
         //Génération des cinq div membres
         divRow.appendElement("div").attr("class", "col-md-1");
         Element divAntoine = divRow.appendElement("div").attr("class", "col-md-2");
-        Element imgAntoine = divAntoine.appendElement("div").attr("class", "circular_antoine");
         Element textAntoine = divAntoine.appendElement("span").attr("class", "span_nom").text("Antoine RAVET");
         Element divAlexis = divRow.appendElement("div").attr("class", "col-md-2");
-        Element imgAlexis = divAlexis.appendElement("div").attr("class", "circular_alexis");
         Element textAlexis = divAlexis.appendElement("span").attr("class", "span_nom").text("Alexis RENAULT");
         Element divPL = divRow.appendElement("div").attr("class", "col-md-2");
-        Element imgPL = divPL.appendElement("div").attr("class", "circular_PL");
         Element textPL= divPL.appendElement("span").attr("class", "span_nom").text("Pierre-Louis OLLIVIER");
         Element divElina = divRow.appendElement("div").attr("class", "col-md-2");
-        Element imgElina = divElina.appendElement("div").attr("class", "circular_elina");
         Element textElina = divElina.appendElement("span").attr("class", "span_nom").text("Elina LEPETIT");
         Element divKilian = divRow.appendElement("div").attr("class", "col-md-2");
-        Element imgKilian = divKilian.appendElement("div").attr("class", "circular_kilian");
         Element textKilain = divKilian.appendElement("span").attr("class", "span_nom").text("Kilian GUEGAN");
         divRow.appendElement("div").attr("class", "col-md-1");
 
