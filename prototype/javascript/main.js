@@ -18,6 +18,14 @@ $( document ).ready(function() {
           //On définit le type de graphique
         switch($(this).data("type")) {
               case "barChart":
+                  data = $(this).data("data");
+                  var tableauFinal = new Array;
+                  var tableauLabel = new Array;
+                  $.each($(this).data("data"), function( index, value ) {
+                    var value = value.replace(/,/g, '.');
+                    tableauFinal.push(value);
+                  });
+                  data = tableauFinal;
                   type = "bar";
                   break;
               case "barChartString":
@@ -69,10 +77,8 @@ $( document ).ready(function() {
                       }
                     });
                     data = tableauFinal;
-                    console.log(data);
                     labels = tableauLabel;
-                    console.log(labels);
-                    type = "radar";
+                    type = "polarArea";
                   break;
               default:
                   type = "bar";
