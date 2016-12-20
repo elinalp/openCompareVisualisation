@@ -299,7 +299,7 @@ public class HTMLGenerate {
         try
         {
             writeFile(export("pcms/pcms_test_junit/matrice_all_type.csv", "csv"));
-            //writeFile(export("pcms/Comparison_of_smart.pcm", "pcm"));
+            //writeFile(export("pcms/Comparison_of_brainwave_entrainment_software_0.pcm", "pcm"));
 
         }catch (Exception e){
             System.out.println("Problème dans l'écriture du tableau HTML");
