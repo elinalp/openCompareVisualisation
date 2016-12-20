@@ -264,38 +264,33 @@ public class HTMLGenerate {
      */
     public static String export(String nameFile, String type) {
 
-        if(type.equals("csv")){
-            // Create a loader that can handle the file format
-            CSVLoader loader = new CSVLoader(new PCMFactoryImpl(), new CellContentInterpreter(new PCMFactoryImpl()));
+        PCMLoader loader;
 
-            // Load Get PCMS
-            PCMContainer pcmContainer = null;
-            PCM pcm = null;
-            try {
-                pcmContainer = loader.load(new File(nameFile)).get(0);
-                pcm = loader.load(new File(nameFile)).get(0).getPcm();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            //Create head of the HTML document
-            createHead();
-            setTitleHtml(pcm.getName());
-            //Create body of the HTML document
-            createBody(pcmContainer);
-        }else{
-            // Create a loader that can handle the file format
-            PCMLoader loader = new KMFJSONLoader();
-
-            PCMContainer pcmContainer = loader.load(nameFile).get(0);
-            PCM pcm = pcmContainer.getPcm();
-            //Create head of the HTML document
-            createHead();
-            setTitleHtml(pcm.getName());
-            //Create body of the HTML document
-            createBody(pcmContainer);
+        if(type.equals("csv")) {
+            // Create a loader that can handle the file format CSV
+            loader = new CSVLoader(new PCMFactoryImpl(), new CellContentInterpreter(new PCMFactoryImpl()));
+        }
+        // PCM file format
+        else{
+            // Create a loader that can handle the file format PCM/JSON
+            loader = new KMFJSONLoader();
         }
 
+        // Load Get PCMS
+        PCMContainer pcmContainer = null;
+        PCM pcm = null;
+        try {
+            pcmContainer = loader.load(new File(nameFile)).get(0);
+            pcm = loader.load(new File(nameFile)).get(0).getPcm();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //Create head of the HTML document
+        createHead();
+        setTitleHtml(pcm.getName());
+        //Create body of the HTML document
+        createBody(pcmContainer);
 
         //HTML code of the document
         Document.OutputSettings settings = new Document.OutputSettings().prettyPrint(false);
@@ -310,7 +305,9 @@ public class HTMLGenerate {
     public static void main(String[] args){
         try
         {
-            writeFile(export("pcms/pcms_test_junit/matrice_all_type.csv", "csv"));
+            //writeFile(export("pcms/pcms_test_junit/matrice_all_type.csv", "csv"));
+            writeFile(export("pcms/Comparison_of_firewalls_0.pcm", "pcm"));
+
         }catch (Exception e){
             System.out.println("Problème dans l'écriture du tableau HTML");
         }
