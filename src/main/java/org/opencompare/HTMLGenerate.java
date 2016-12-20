@@ -34,7 +34,7 @@ public class HTMLGenerate {
     //Données à envoyé au js
 
     private static ArrayList<String> labels = new ArrayList<>();
-    private static Hashtable<Integer, String> data = new Hashtable<Integer, String>();
+    private static Hashtable<String, String> data = new Hashtable<String, String>();
 
 
     /**
@@ -119,19 +119,54 @@ public class HTMLGenerate {
         Element textAlexis = divAlexis.appendElement("span").attr("class", "span_nom").text("Alexis RENAULT");
         Element divPL = divRow.appendElement("div").attr("class", "col-md-2");
         Element imgPL = divPL.appendElement("div").attr("class", "circular_PL");
-        Element textPL= divPL.appendElement("span").attr("class", "span_nom").text("Pierre-Louis Ollivier");
+        Element textPL= divPL.appendElement("span").attr("class", "span_nom").text("Pierre-Louis OLLIVIER");
         Element divElina = divRow.appendElement("div").attr("class", "col-md-2");
         Element imgElina = divElina.appendElement("div").attr("class", "circular_elina");
         Element textElina = divElina.appendElement("span").attr("class", "span_nom").text("Elina LEPETIT");
         Element divKilian = divRow.appendElement("div").attr("class", "col-md-2");
         Element imgKilian = divKilian.appendElement("div").attr("class", "circular_kilian");
-        Element textKilain = divKilian.appendElement("span").attr("class", "span_nom").text("Kilian Guégan");
+        Element textKilain = divKilian.appendElement("span").attr("class", "span_nom").text("Kilian GUEGAN");
         divRow.appendElement("div").attr("class", "col-md-1");
 
         // Create table
         Element table = body.appendElement("table").attr("border", "1");
         table.addClass("table table-striped table-hover");
+        List<Feature> features = pcmContainer.getPcm().getConcreteFeatures();
+        //Création de la ligne des features
+        Element rowFeature = table.appendElement("tr");
+        //rowFeature.appendElement("td");
+        for(Feature feature: features){
+            rowFeature.appendElement("th").text(feature.getName());
+            for(Cell cell: feature.getCells()){
+                if(data.get(cell.getFeature().getName()) != null){
+                    System.out.println(cell.getFeature().getName());
+                    data.put(cell.getFeature().getName(), data.get(cell.getFeature().getName()) + ',' + '"' + cell.getContent() + '"');
+                }else {
+                    data.put(cell.getFeature().getName(), '"' + cell.getContent() + '"');
+                }
+            }
+        }
 
+
+        List<Product> products = pcmContainer.getPcm().getProducts();
+
+
+        for (Product product : products) {
+            Element productsRow = table.appendElement("tr");
+            productsRow.appendElement("th").text(product.getKeyContent());
+            labels.add( '"' + product.getKeyContent() + '"');
+            for(Cell cell : product.getCells()){
+                if(!cell.getProduct().getKeyCell().equals(cell)){
+                    productsRow.appendElement("td").text(cell.getContent());
+                }
+
+            }
+
+        }
+
+
+
+        /*
         ExportMatrix exportMatrix = exportMatrixExporter.export(pcmContainer);
         for (int row = 0; row < exportMatrix.getNumberOfRows(); row++) {
             Element htmlRow = table.appendElement("tr");
@@ -168,10 +203,11 @@ public class HTMLGenerate {
                 }
 
             }
-        }
+        } */
 
         //Génératon de la dernière ligne : icone d'affichage des graphes
         Element dernierLigne = table.appendElement("tr");
+        //dernierLigne.appendElement("td");
         int indexFeature = 0;
         for(Feature f : pcmContainer.getPcm().getConcreteFeatures()){
 
@@ -218,7 +254,7 @@ public class HTMLGenerate {
                     Element lienChart = colonneGraph.appendElement("a");
                     lienChart.attr("data-type", c.getNameChart());
 
-                    String tableauData = "[" + data.get(indexFeature) + "]";
+                    String tableauData = "[" + data.get(f.getName()) + "]";
 
                     lienChart.attr("data-data", tableauData);
                     lienChart.attr("data-labels", labels.toString());
@@ -300,7 +336,7 @@ public class HTMLGenerate {
         try
         {
             // Ecriture du fichier HTML (écrase si le fichier existe déjà)
-            writeFile(export("pcms/pcms_test_junit/Comparison_of_English_dictionaries_0.pcm"));
+            writeFile(export("pcms/example.pcm"));
         }catch (Exception e){
 
         }
