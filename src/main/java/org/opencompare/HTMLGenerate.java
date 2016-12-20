@@ -64,16 +64,9 @@ public class HTMLGenerate {
         script.attr("integrity", "sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa");
         script.attr("crossorigin", "anonymous");
 
-        //Ajout Chartist
-        Element linkChartist = head.appendElement("link");
-        linkChartist.attr("rel","stylesheet");
-        linkChartist.attr("href", "/getting-started/chartist/chartist.min.css");
-
-        Element scriptChartist =  head.appendElement("script");
-        scriptChartist.attr("src" ,"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js");
-
-        Element scriptChartist2 =  head.appendElement("script");
-        scriptChartist.attr("src" ,"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js");
+        Element scriptChart =  head.appendElement("script");
+        scriptChart.attr("src" ,"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js");
+        scriptChart.attr("src" ,"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js");
 
         //Ajout Font Awesome
         Element linkFont = head.appendElement("link");
@@ -305,8 +298,8 @@ public class HTMLGenerate {
     public static void main(String[] args){
         try
         {
-            //writeFile(export("pcms/pcms_test_junit/matrice_all_type.csv", "csv"));
-            writeFile(export("pcms/Comparison_of_smart.pcm", "pcm"));
+            writeFile(export("pcms/pcms_test_junit/matrice_all_type.csv", "csv"));
+            //writeFile(export("pcms/Comparison_of_smart.pcm", "pcm"));
 
         }catch (Exception e){
             System.out.println("Problème dans l'écriture du tableau HTML");
