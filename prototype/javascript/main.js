@@ -51,11 +51,28 @@ $( document ).ready(function() {
                     }
                   });
                   data = tableauFinal;
+
                   labels = tableauLabel;
                   type = "pie";
                   break;
               case "polarChart":
-                  type = "radar";
+                  data = $(this).data("data");
+                    var tableauFinal = new Array;
+                    var tableauLabel = new Array;
+                    $.each($(this).data("data"), function( index, value ) {
+                      var nbOccur = data.filter(function (elem) {
+                          return elem === value;
+                      }).length;
+                      if (tableauLabel.indexOf(value) === -1) {
+                        tableauFinal.push(nbOccur);
+                        tableauLabel.push(value);
+                      }
+                    });
+                    data = tableauFinal;
+                    console.log(data);
+                    labels = tableauLabel;
+                    console.log(labels);
+                    type = "radar";
                   break;
               default:
                   type = "bar";
@@ -66,6 +83,7 @@ $( document ).ready(function() {
             data: {
                 labels: labels,
                 datasets: [{
+                    label: "Graphique " + type,
                     data: data,
                     borderWidth: 1,
                     backgroundColor:
