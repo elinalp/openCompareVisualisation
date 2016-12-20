@@ -128,7 +128,7 @@ public class FeatureViz {
                 // Pie Chart
                 listChart.add(new PieChart("pieChart", "fa fa-pie-chart", this.typeSelected));
                 // Diagramme polaire
-                listChart.add(new PolarChart("polarChart", "fa fa-polar-chart", this.typeSelected));
+                listChart.add(new PolarChart("polarChart", "fa fa-bullseye", this.typeSelected));
 
             } else {
                 // Diagramme en baton

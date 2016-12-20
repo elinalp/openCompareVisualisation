@@ -36,8 +36,9 @@ public class HTMLGenerate {
     //Données à envoyé au js
 
     private static ArrayList<String> labels = new ArrayList<>();
-    private static Hashtable<String, String> data = new Hashtable<String, String>();
+    private static Hashtable<Integer, String> data = new Hashtable<Integer, String>();
 
+    public static final boolean USER_CHOICE = false;
 
     /**
      * Crée l'entête du document HTML
@@ -137,6 +138,7 @@ public class HTMLGenerate {
         //Création de la ligne des features
         Element rowFeature = table.appendElement("tr");
         //rowFeature.appendElement("td");
+        /*
         for(Feature feature: features){
             rowFeature.appendElement("th").text(feature.getName());
             for(Cell cell: feature.getCells()){
@@ -166,12 +168,11 @@ public class HTMLGenerate {
 
             }
 
-        }
+        } */
 
 
-        /*
+
         ExportMatrix exportMatrix = exportMatrixExporter.export(pcmContainer);
-        exportMatrix.flattenCells();
         for (int row = 0; row < exportMatrix.getNumberOfRows(); row++) {
             Element htmlRow = table.appendElement("tr");
 
@@ -207,13 +208,13 @@ public class HTMLGenerate {
                 }
 
             }
-        } */
+        }
 
         //Génératon de la dernière ligne : icone d'affichage des graphes
         Element dernierLigne = table.appendElement("tr");
         //dernierLigne.appendElement("td");
         int indexFeature = 0;
-        for(Feature f : pcmContainer.getPcm().getConcreteFeatures()){
+        for(Feature f : features){
 
             //Dans tous les cas on crée un td mais il ne sera pas remplit pour le product
             Element colonneGraph = dernierLigne.appendElement("td");
@@ -221,12 +222,20 @@ public class HTMLGenerate {
             //On exclut le product pour l'algo suivant
             if(indexFeature>0){
 
+                System.out.println(f);
+
                 colonneGraph.addClass("graph_cell");
                 //Algo récupération liste des charts
                 FeatureViz viz = featureVizFactory.makeFeatureViz(f);
                 Hashtable<Class<Value>, Integer> typesCollection = viz.getTypesFeature();
                 Feature2TypeConfig f2tc = new Feature2TypeConfig(typesCollection);
-                Class<Value> valuePredominant = f2tc.getPredominantType();
+                Class<Value> valuePredominant;
+                if(!USER_CHOICE){
+                    valuePredominant = f2tc.getPredominantType();
+                }else{
+                    valuePredominant = f2tc.getRandomType();
+                }
+
                 viz.setTypeSelected(valuePredominant);
                 List<Chart> chartsList = viz.getListCharts();
 
@@ -298,8 +307,14 @@ public class HTMLGenerate {
             CSVLoader loader = new CSVLoader(new PCMFactoryImpl(), new CellContentInterpreter(new PCMFactoryImpl()));
 
             // Load Get PCMS
-            PCMContainer pcmContainer = loader.load(nameFile).get(0);
-            PCM pcm = loader.load(nameFile).get(0).getPcm();
+            PCMContainer pcmContainer = null;
+            PCM pcm = null;
+            try {
+                pcmContainer = loader.load(new File(nameFile)).get(0);
+                pcm = loader.load(new File(nameFile)).get(0).getPcm();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             //Create head of the HTML document
             createHead();
@@ -313,8 +328,6 @@ public class HTMLGenerate {
 
             PCMContainer pcmContainer = loader.load(nameFile).get(0);
             PCM pcm = pcmContainer.getPcm();
-            System.out.println("ici");
-            System.out.println(pcm.getName());
             //Create head of the HTML document
             createHead();
             setTitleHtml(pcm.getName());
