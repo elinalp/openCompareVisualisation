@@ -26,7 +26,6 @@ import java.util.*;
  * Created by gbecan on 13/10/14.
  */
 public class HTMLGenerate {
-
     private static ExportMatrixExporter exportMatrixExporter = new ExportMatrixExporter();
     private static Document doc = Document.createShell("");
     private static Element head = doc.head();
@@ -107,70 +106,13 @@ public class HTMLGenerate {
         Element divHeader = banner.appendElement("div").attr("class", "inner");
         divHeader.appendElement("h1").attr("class", "h1_custom").text("Projet PDL MIAGE");
 
-
-        Element divProfil = banner.appendElement("div").attr("class", "container");
-        divProfil.appendElement("h2").attr("class", "h2_custom").text("Notre équipe: ");
-        Element divRow = divProfil.appendElement("div").attr("class", "row text-center");
-
-        //Génération des cinq div membres
-        divRow.appendElement("div").attr("class", "col-md-1");
-        Element divAntoine = divRow.appendElement("div").attr("class", "col-md-2");
-        Element imgAntoine = divAntoine.appendElement("div").attr("class", "circular_antoine");
-        Element textAntoine = divAntoine.appendElement("span").attr("class", "span_nom").text("Antoine RAVET");
-        Element divAlexis = divRow.appendElement("div").attr("class", "col-md-2");
-        Element imgAlexis = divAlexis.appendElement("div").attr("class", "circular_alexis");
-        Element textAlexis = divAlexis.appendElement("span").attr("class", "span_nom").text("Alexis RENAULT");
-        Element divPL = divRow.appendElement("div").attr("class", "col-md-2");
-        Element imgPL = divPL.appendElement("div").attr("class", "circular_PL");
-        Element textPL= divPL.appendElement("span").attr("class", "span_nom").text("Pierre-Louis OLLIVIER");
-        Element divElina = divRow.appendElement("div").attr("class", "col-md-2");
-        Element imgElina = divElina.appendElement("div").attr("class", "circular_elina");
-        Element textElina = divElina.appendElement("span").attr("class", "span_nom").text("Elina LEPETIT");
-        Element divKilian = divRow.appendElement("div").attr("class", "col-md-2");
-        Element imgKilian = divKilian.appendElement("div").attr("class", "circular_kilian");
-        Element textKilain = divKilian.appendElement("span").attr("class", "span_nom").text("Kilian GUEGAN");
-        divRow.appendElement("div").attr("class", "col-md-1");
-
         // Create table
         Element table = body.appendElement("table").attr("border", "1");
         table.addClass("table table-striped table-hover");
         List<Feature> features = pcmContainer.getPcm().getConcreteFeatures();
         //Création de la ligne des features
         Element rowFeature = table.appendElement("tr");
-        //rowFeature.appendElement("td");
-        /*
-        for(Feature feature: features){
-            rowFeature.appendElement("th").text(feature.getName());
-            for(Cell cell: feature.getCells()){
-                if(data.get(cell.getFeature().getName()) != null){
-                    System.out.println(cell.getFeature().getName());
-                    data.put(cell.getFeature().getName(), data.get(cell.getFeature().getName()) + ',' + '"' + cell.getContent() + '"');
-                }else {
-                    data.put(cell.getFeature().getName(), '"' + cell.getContent() + '"');
-                }
-            }
-        }
-
-
-        List<Product> products = pcmContainer.getPcm().getProducts();
-
-
-        for (Product product : products) {
-            Element productsRow = table.appendElement("tr");
-            productsRow.appendElement("th").text(product.getKeyContent());
-            labels.add( '"' + product.getKeyContent() + '"');
-            for(Cell cell : product.getCells()){
-                System.out.println("Product: " + product.getKeyContent());
-                System.out.println("Données " + cell);
-                if(!cell.getProduct().getKeyCell().equals(cell)){
-                    productsRow.appendElement("td").text(cell.getContent());
-                }
-
-            }
-
-        } */
-
-
+        List<String> featuresName = new ArrayList<String>();
 
         ExportMatrix exportMatrix = exportMatrixExporter.export(pcmContainer);
         for (int row = 0; row < exportMatrix.getNumberOfRows(); row++) {
@@ -185,6 +127,8 @@ public class HTMLGenerate {
                         //On ignore la première ligne
                         if(row >= 1){
                             labels.add( '"' + exportCell.getContent() + '"');
+                        } else {
+                            featuresName.add(exportCell.getContent());
                         }
                     } else {
                         htmlCell = htmlRow.appendElement("td");
@@ -214,58 +158,59 @@ public class HTMLGenerate {
         Element dernierLigne = table.appendElement("tr");
         //dernierLigne.appendElement("td");
         int indexFeature = 0;
-        for(Feature f : features){
+        int indexNameFeature = 0;
+        for(String nameFeature : featuresName){
+            for(Feature f : features){
+                if(nameFeature.equals(f.getName())) {
 
-            //Dans tous les cas on crée un td mais il ne sera pas remplit pour le product
-            Element colonneGraph = dernierLigne.appendElement("td");
+                    //Dans tous les cas on crée un td mais il ne sera pas remplit pour le product
+                    Element colonneGraph = dernierLigne.appendElement("td");
 
-            //On exclut le product pour l'algo suivant
-            if(indexFeature>0){
+                    //On exclut le product pour l'algo suivant
+                    if (indexFeature > 0) {
 
-                System.out.println(f);
+                        System.out.println(f);
 
-                colonneGraph.addClass("graph_cell");
-                //Algo récupération liste des charts
-                FeatureViz viz = featureVizFactory.makeFeatureViz(f);
-                Hashtable<Class<Value>, Integer> typesCollection = viz.getTypesFeature();
-                Feature2TypeConfig f2tc = new Feature2TypeConfig(typesCollection);
-                Class<Value> valuePredominant;
-                if(!USER_CHOICE){
-                    valuePredominant = f2tc.getPredominantType();
-                }else{
-                    valuePredominant = f2tc.getRandomType();
+                        colonneGraph.addClass("graph_cell");
+                        //Algo récupération liste des charts
+                        FeatureViz viz = featureVizFactory.makeFeatureViz(f);
+                        Hashtable<Class<Value>, Integer> typesCollection = viz.getTypesFeature();
+                        Feature2TypeConfig f2tc = new Feature2TypeConfig(typesCollection);
+                        Class<Value> valuePredominant;
+                        if (!USER_CHOICE) {
+                            valuePredominant = f2tc.getPredominantType();
+                        } else {
+                            valuePredominant = f2tc.getRandomType();
+                        }
+
+                        viz.setTypeSelected(valuePredominant);
+                        List<Chart> chartsList = viz.getListCharts();
+
+                        //Parcours de la liste des charts
+                        for (Chart c : chartsList) {
+                            c.getFeatureType();
+                            c.getNameChart();
+                            c.getNameIcon();
+                            Element lienChart = colonneGraph.appendElement("a");
+                            lienChart.attr("data-type", c.getNameChart());
+
+                            String tableauData = "[" + data.get(indexFeature) + "]";
+
+                            lienChart.attr("data-data", tableauData);
+                            lienChart.attr("data-labels", labels.toString());
+                            lienChart.addClass("GenereGraph");
+                            Element iconeBarChart = lienChart.appendElement("i");
+                            iconeBarChart.addClass(c.getNameIcon());
+                        }
+                    }
+                    //On incrémente l'index
+                    indexFeature++;
+
                 }
 
-                viz.setTypeSelected(valuePredominant);
-                List<Chart> chartsList = viz.getListCharts();
-
-                //Parcours de la liste des charts
-                for(Chart c : chartsList) {
-                    //System.out.println(data.toString());
-                    //System.out.println(labels.toString());
-
-                    // Antoine pour chaque Chart c
-                    // Le type des feature a choisir pour le graphique ? ( Surement afficher pour chaque cellules le type
-                    // Si il y a plusieurs type de données dans le feature on prend uniqement les données associé a c.getFeatureType();
-                    // Quelque chose comme ca : data-cell-type = cell.getInterpretation()
-                    c.getFeatureType();
-                    c.getNameChart();
-                    c.getNameIcon();
-                    Element lienChart = colonneGraph.appendElement("a");
-                    lienChart.attr("data-type", c.getNameChart());
-
-                    String tableauData = "[" + data.get(indexFeature) + "]";
-
-                    lienChart.attr("data-data", tableauData);
-                    lienChart.attr("data-labels", labels.toString());
-                    lienChart.addClass("GenereGraph");
-                    Element iconeBarChart = lienChart.appendElement("i");
-                    iconeBarChart.addClass(c.getNameIcon());
-                }
             }
-            //On incrémente l'index
-            indexFeature++;
         }
+
 
 
         //Div pour la création de graphe
@@ -368,6 +313,7 @@ public class HTMLGenerate {
         PCMLoader loader = new KMFJSONLoader();
         return loader.load(pcmFile).get(0).getPcm();
     }
+
 
 
 }
