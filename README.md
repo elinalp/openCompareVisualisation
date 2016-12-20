@@ -70,13 +70,13 @@ Project Architecture
  (Default userChoice : false, initialize in the class "HTMLGenerate")
 
  To launch the html page creation,
- * Choose a pcm on the main HTMLGenerate.java (public static void main(String[] args){ } )
+* Choose a pcm on the main HTMLGenerate.java (public static void main(String[] args){ } )
   * To CSV format
     writeFile(export("pcms/myFileExample.csv", "csv"));
   * Or to PCM format
     writeFile(export("pcms/myFileExample.pcm", "pcm"));
- * Run the HTMLGenerate.java
- * Open simple-example.html on browser
+* Run the HTMLGenerate.java
+* Open simple-example.html on browser
 
 ----------------------
 Future work
