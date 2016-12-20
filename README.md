@@ -61,7 +61,7 @@ Project Architecture
 
 * src : implementation API
  * main.java.org.openCompare : source code
- * main.java.org.openCompare.test : implement some tests to the visualization methods
+ * main.java.org.openCompare.test : implement some Junit tests to the visualization methods
 
  ----------------------
  Generate a html page
@@ -70,7 +70,11 @@ Project Architecture
  (Default userChoice : false, initialize in the class "HTMLGenerate")
 
  To launch the html page creation,
- * Choose a pcm on the main HTMLGenerate.java
+ * Choose a pcm on the main HTMLGenerate.java (public static void main(String[] args){ } )
+  * To CSV format
+    writeFile(export("pcms/myFileExample.csv", "csv"));
+  * Or to PCM format
+    writeFile(export("pcms/myFileExample.pcm", "pcm"));
  * Run the HTMLGenerate.java
  * Open simple-example.html on browser
 
