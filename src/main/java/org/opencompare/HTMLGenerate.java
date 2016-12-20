@@ -267,7 +267,6 @@ public class HTMLGenerate {
             //Create body of the HTML document
             createBody(pcmContainer);
         }else{
-
             // Create a loader that can handle the file format
             PCMLoader loader = new KMFJSONLoader();
 
@@ -294,7 +293,6 @@ public class HTMLGenerate {
     public static void main(String[] args){
         try
         {
-
             writeFile(export("pcms/pcms_test_junit/matrice_all_type.csv", "csv"));
         }catch (Exception e){
 

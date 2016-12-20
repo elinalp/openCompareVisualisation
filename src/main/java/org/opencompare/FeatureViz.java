@@ -133,7 +133,7 @@ public class FeatureViz {
             } else {
                 // Diagramme en baton
                 // regroupement
-                listChart.add(new BarChart("barChart", "fa fa-bar-chart", this.typeSelected, true));
+                listChart.add(new BarChart("barChartString", "fa fa-bar-chart", this.typeSelected, true));
             }
         } else {
 

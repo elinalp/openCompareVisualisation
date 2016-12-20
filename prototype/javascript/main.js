@@ -20,6 +20,23 @@ $( document ).ready(function() {
               case "barChart":
                   type = "bar";
                   break;
+              case "barChartString":
+                  data = $(this).data("data");
+                  var tableauFinal = new Array;
+                  var tableauLabel = new Array;
+                  $.each($(this).data("data"), function( index, value ) {
+                    var nbOccur = data.filter(function (elem) {
+                        return elem === value;
+                     }).length;
+                     if (tableauLabel.indexOf(value) === -1) {
+                       tableauFinal.push(nbOccur);
+                       tableauLabel.push(value);
+                     }
+                  });
+                  data = tableauFinal;
+                  labels = tableauLabel;
+                  type = "bar";
+                  break;
               case "pieChart":
                   data = $(this).data("data");
                   var tableauFinal = new Array;
