@@ -6,7 +6,9 @@ import org.jsoup.nodes.Entities;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.parser.Tag;
 import org.opencompare.api.java.*;
+import org.opencompare.api.java.extractor.CellContentInterpreter;
 import org.opencompare.api.java.impl.FeatureImpl;
+import org.opencompare.api.java.impl.PCMFactoryImpl;
 import org.opencompare.api.java.impl.ValueImpl;
 import org.opencompare.api.java.impl.io.KMFJSONLoader;
 import org.opencompare.api.java.util.Pair;
@@ -156,6 +158,8 @@ public class HTMLGenerate {
             productsRow.appendElement("th").text(product.getKeyContent());
             labels.add( '"' + product.getKeyContent() + '"');
             for(Cell cell : product.getCells()){
+                System.out.println("Product: " + product.getKeyContent());
+                System.out.println("Données " + cell);
                 if(!cell.getProduct().getKeyCell().equals(cell)){
                     productsRow.appendElement("td").text(cell.getContent());
                 }
@@ -165,9 +169,9 @@ public class HTMLGenerate {
         }
 
 
-
         /*
         ExportMatrix exportMatrix = exportMatrixExporter.export(pcmContainer);
+        exportMatrix.flattenCells();
         for (int row = 0; row < exportMatrix.getNumberOfRows(); row++) {
             Element htmlRow = table.appendElement("tr");
 
@@ -226,19 +230,6 @@ public class HTMLGenerate {
                 viz.setTypeSelected(valuePredominant);
                 List<Chart> chartsList = viz.getListCharts();
 
-                //Parcours des cell de chaque feature
-                // Récupère la liste des cellules de la feature
-                List<Cell> listCells = f.getCells();
-                // Parcours de la liste des cellules
-                Iterator iterator = listCells.iterator();
-                Value cellValue = null;
-                while (iterator.hasNext()) {
-                    Cell c = (Cell) iterator.next();
-
-                    // Récupération du type de la cellule
-                    cellValue =  c.getInterpretation();
-                }
-
                 //Parcours de la liste des charts
                 for(Chart c : chartsList) {
                     //System.out.println(data.toString());
@@ -254,7 +245,7 @@ public class HTMLGenerate {
                     Element lienChart = colonneGraph.appendElement("a");
                     lienChart.attr("data-type", c.getNameChart());
 
-                    String tableauData = "[" + data.get(f.getName()) + "]";
+                    String tableauData = "[" + data.get(indexFeature) + "]";
 
                     lienChart.attr("data-data", tableauData);
                     lienChart.attr("data-labels", labels.toString());
@@ -300,28 +291,38 @@ public class HTMLGenerate {
      *
      * @return String : la chaîne de caractère contenant le code de la page HTMl
      */
-    public static String export(String nameFile) {
-        File pcmFile = new File(nameFile);
-        // Create a loader that can handle the file format
-        PCMLoader loader = new KMFJSONLoader();
-        //Create head of the HTML document
-        createHead();
+    public static String export(String nameFile, String type) {
 
-        try
-        {
-            // Load the file
-            // A loader may return multiple PCM containers depending on the input format
-            // A PCM container encapsulates a PCM and its associated metadata
-            List<PCMContainer> pcmContainers = loader.load(pcmFile);
-            for (PCMContainer pcmContainer : pcmContainers) {
-                PCM pcm = pcmContainer.getPcm();
-                setTitleHtml(pcm.getName());
-                //Create body of the HTML document
-                createBody(pcmContainer);
-            }
-        }catch (Exception e){
+        if(type.equals("csv")){
+            // Create a loader that can handle the file format
+            CSVLoader loader = new CSVLoader(new PCMFactoryImpl(), new CellContentInterpreter(new PCMFactoryImpl()));
 
+            // Load Get PCMS
+            PCMContainer pcmContainer = loader.load(nameFile).get(0);
+            PCM pcm = loader.load(nameFile).get(0).getPcm();
+
+            //Create head of the HTML document
+            createHead();
+            setTitleHtml(pcm.getName());
+            //Create body of the HTML document
+            createBody(pcmContainer);
+        }else{
+
+            // Create a loader that can handle the file format
+            PCMLoader loader = new KMFJSONLoader();
+
+            PCMContainer pcmContainer = loader.load(nameFile).get(0);
+            PCM pcm = pcmContainer.getPcm();
+            System.out.println("ici");
+            System.out.println(pcm.getName());
+            //Create head of the HTML document
+            createHead();
+            setTitleHtml(pcm.getName());
+            //Create body of the HTML document
+            createBody(pcmContainer);
         }
+
+
         //HTML code of the document
         Document.OutputSettings settings = new Document.OutputSettings().prettyPrint(false);
         return doc.outputSettings(settings).outerHtml();
@@ -335,8 +336,8 @@ public class HTMLGenerate {
     public static void main(String[] args){
         try
         {
-            // Ecriture du fichier HTML (écrase si le fichier existe déjà)
-            writeFile(export("pcms/example.pcm"));
+
+            writeFile(export("pcms/pcms_test_junit/matrice_all_type.csv", "csv"));
         }catch (Exception e){
 
         }
