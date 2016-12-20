@@ -54,7 +54,6 @@ public class HTMLGenerate {
         scriptJquery.attr("crossorigin", "anonymous");
 
         //Ajout de Bootstrap
-        //TODO: Rajout lib Bootstrap pour execution en local
         Element link = head.appendElement("link");
         link.attr("rel","stylesheet");
         link.attr("href", "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css");
