@@ -194,7 +194,7 @@ public class FeatureVizTest {
                 case "moda_sup":
 
                     assertEquals("Matrice correcte - Liste de charts - Taille - Feature " + feature.getName(), listChart.size(), 1);
-                    assertEquals("Matrice correcte - Liste de charts - Name chart - Feature " + feature.getName(), listChart.get(0).getNameChart(), "barChart");
+                    assertEquals("Matrice correcte - Liste de charts - Name chart - Feature " + feature.getName(), listChart.get(0).getNameChart(), "barChartString");
                     break;
 
                 case "moda_inf":
@@ -206,9 +206,8 @@ public class FeatureVizTest {
 
                 case "boolean":
 
-                    assertEquals("Matrice correcte - Liste de charts - Taille - Feature " + feature.getName(), listChart.size(), 2);
+                    assertEquals("Matrice correcte - Liste de charts - Taille - Feature " + feature.getName(), listChart.size(), 1);
                     assertEquals("Matrice correcte - Liste de charts - Name chart - Feature " + feature.getName(), listChart.get(0).getNameChart(), "pieChart");
-                    assertEquals("Matrice correcte - Liste de charts - Name chart - Feature " + feature.getName(), listChart.get(1).getNameChart(), "polarChart");
                     break;
 
                 case "reel":
